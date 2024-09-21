@@ -3,6 +3,7 @@ package com.gonggam.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -12,10 +13,7 @@ public class User {
     private String username;
     private String password;
 
-    // 기본 생성자
-    public User() {}
-
-    // Getters 및 Setters
+    // Getter 및 Setter
     public Long getId() {
         return id;
     }

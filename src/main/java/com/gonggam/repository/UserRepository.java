@@ -1,4 +1,3 @@
-// src/main/java/com/gonggam/repository/UserRepository.java
 package com.gonggam.repository;
 
 import com.gonggam.entity.User;

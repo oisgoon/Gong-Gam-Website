@@ -1,24 +1,20 @@
 package com.gonggam.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "comments")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String content;
+
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
 
-    private String content;
-    private String author;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    // Getter 및 Setter
 }

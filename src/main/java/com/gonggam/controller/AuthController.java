@@ -2,26 +2,34 @@
 package com.gonggam.controller;
 
 import com.gonggam.entity.User;
-import com.gonggam.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.gonggam.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // 암호화 관련
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class AuthController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
 
-    @PostMapping("/api/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword())); // 비밀번호 암호화
-        userRepository.save(user);
-        return ResponseEntity.ok("회원가입 성공");
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
-    // 로그인 API 추가...
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        boolean isRegistered = userService.registerUser(user);
+        return isRegistered
+                ? ResponseEntity.ok("회원가입 성공")
+                : ResponseEntity.badRequest().body("회원가입 실패");
+    }
+
+    // 로그인 메서드 추가
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user) {
+        boolean isAuthenticated = userService.authenticateUser(user.getUsername(), user.getPassword());
+        return isAuthenticated
+                ? ResponseEntity.ok("로그인 성공")
+                : ResponseEntity.badRequest().body("로그인 실패");
+    }
 }
