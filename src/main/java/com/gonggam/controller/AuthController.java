@@ -20,8 +20,12 @@ public class AuthController {
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         boolean isRegistered = userService.registerUser(user);
         return isRegistered
-                ? ResponseEntity.ok("회원가입 성공")
-                : ResponseEntity.badRequest().body("회원가입 실패");
+                ? ResponseEntity.ok()
+                .header("Content-Type", "text/plain; charset=UTF-8")
+                .body("회원가입 성공")
+                : ResponseEntity.badRequest()
+                .header("Content-Type", "text/plain; charset=UTF-8")
+                .body("회원가입 실패");
     }
 
     // 로그인 메서드 추가
@@ -29,7 +33,11 @@ public class AuthController {
     public ResponseEntity<String> loginUser(@RequestBody User user) {
         boolean isAuthenticated = userService.authenticateUser(user.getUsername(), user.getPassword());
         return isAuthenticated
-                ? ResponseEntity.ok("로그인 성공")
-                : ResponseEntity.badRequest().body("로그인 실패");
+                ? ResponseEntity.ok()
+                .header("Content-Type", "text/plain; charset=UTF-8")
+                .body("로그인 성공")
+                : ResponseEntity.badRequest()
+                .header("Content-Type", "text/plain; charset=UTF-8")
+                .body("로그인 실패");
     }
 }

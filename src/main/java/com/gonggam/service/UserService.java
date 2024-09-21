@@ -1,4 +1,3 @@
-// src/main/java/com/gonggam/service/UserService.java
 package com.gonggam.service;
 
 import com.gonggam.entity.User;
@@ -14,6 +13,7 @@ public class UserService {
 
     public boolean registerUser(User user) {
         // 회원가입 로직 구현
+        userRepository.save(user); // 사용자 정보를 데이터베이스에 저장
         return true; // 성공 시 true 반환
     }
 
