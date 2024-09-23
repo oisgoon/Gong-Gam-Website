@@ -1,7 +1,7 @@
 // src/components/PostList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styles.css'; // CSS 파일 임포트
+import './styles.css';
 
 const PostList = () => {
     const [posts, setPosts] = useState([]);
@@ -21,14 +21,18 @@ const PostList = () => {
 
     return (
         <div className="container">
-            <h1>게시글 목록</h1>
-            {posts.map(post => (
-                <div key={post.id} className="post">
-                    <div className="post-title">{post.title}</div>
-                    <div className="post-author">작성자: {post.author}</div>
-                    <div className="post-content">{post.content}</div>
-                </div>
-            ))}
+            <h2>게시글 목록</h2>
+            {posts.length > 0 ? (
+                posts.map(post => (
+                    <div key={post.id} className="post">
+                        <div className="post-title">{post.title}</div>
+                        <div className="post-author">작성자: {post.author}</div>
+                        <div className="post-content">{post.content}</div>
+                    </div>
+                ))
+            ) : (
+                <p>게시글이 없습니다.</p>
+            )}
         </div>
     );
 };

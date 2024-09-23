@@ -1,7 +1,5 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles.css';
 
 const Login = ({ setLoggedIn }) => {
     const [username, setUsername] = useState('');
@@ -11,10 +9,9 @@ const Login = ({ setLoggedIn }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/login', { username, password });
-            console.log(response.data);  // 서버의 응답 데이터를 확인
-            setLoggedIn(true);
-            alert('로그인 성공');
+            const response = await axios.post('/api/login', { username, password });
+            console.log(response.data);
+            setLoggedIn(true);  // 로그인 성공 시 상태 업데이트
         } catch (error) {
             setMessage('로그인 실패: 잘못된 사용자 이름이나 비밀번호');
         }
