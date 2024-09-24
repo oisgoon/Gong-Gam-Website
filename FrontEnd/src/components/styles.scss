@@ -37,7 +37,9 @@ body {
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-  }
+    width: 50vw;  /* 가로 크기: 화면 너비의 50% */
+    height: 50vh; /* 세로 크기: 화면 높이의 50% */
+}
   
   /* 로그인, 게시글 작성 폼 */
   form {

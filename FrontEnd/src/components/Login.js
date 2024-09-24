@@ -1,43 +1,45 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+import './styles.scss';
 
 const Login = ({ setLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
 
-    const handleLogin = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('/api/login', { username, password });
-            console.log(response.data);
-            setLoggedIn(true);  // 로그인 성공 시 상태 업데이트
-        } catch (error) {
-            setMessage('로그인 실패: 잘못된 사용자 이름이나 비밀번호');
-        }
+        // 로그인 로직 처리
+        setLoggedIn(true);  // 로그인 성공 시 상태 변경
     };
 
     return (
         <div className="container">
             <h2>로그인</h2>
-            <form onSubmit={handleLogin}>
-                <input 
-                    type="text" 
-                    placeholder="사용자 이름" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                    required 
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="아이디"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
                 />
-                <input 
-                    type="password" 
-                    placeholder="비밀번호" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
+                <input
+                    type="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                 />
                 <button type="submit">로그인</button>
-                {message && <div className="error-message">{message}</div>}
             </form>
+
+            {/* "계정이 없으신가요?" 부분을 container 안에 배치 */}
+            <div className="link">
+                계정이 없으신가요?{' '}
+                <Link to="/register" className="register-link">
+                    회원가입
+                </Link>
+            </div>
         </div>
     );
 };
