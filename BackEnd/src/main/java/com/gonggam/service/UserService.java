@@ -12,13 +12,19 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean registerUser(User user) {
-        // 회원가입 로직 구현
-        userRepository.save(user); // 사용자 정보를 데이터베이스에 저장
-        return true; // 성공 시 true 반환
+        if (isUserIdTaken(user.getUserid())) {
+            return false; // userid 중복 시 실패 반환
+        }
+        userRepository.save(user);
+        return true;
     }
 
-    public boolean authenticateUser(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        return user != null && user.getPassword().equals(password); // 비밀번호 검증 로직
+    public boolean authenticateUserByUserid(String userid, String password) {
+        User user = userRepository.findByUserid(userid);
+        return user != null && user.getPassword().equals(password);
+    }
+
+    public boolean isUserIdTaken(String userid) {
+        return userRepository.findByUserid(userid) != null;
     }
 }

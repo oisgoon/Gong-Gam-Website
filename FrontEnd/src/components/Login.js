@@ -64,15 +64,15 @@ const ErrorMessage = styled.div`
 `;
 
 const Login = ({ setLoggedIn }) => {
-    const [username, setUsername] = useState('');
+    const [userid, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');  // 메시지 상태 추가
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            console.log(username, password);
-            const response = await axios.post('http://localhost:8080/api/login', { username, password });
+            console.log(userid, password);
+            const response = await axios.post('http://localhost:8080/api/login', { userid, password });
             console.log(response.data);
             setLoggedIn(true);  // 로그인 성공 시 상태 업데이트
         } catch (error) {
@@ -87,7 +87,7 @@ const Login = ({ setLoggedIn }) => {
                 <input
                     type="text"
                     placeholder="아이디"
-                    value={username}
+                    value={userid}
                     onChange={(e) => setUsername(e.target.value)}
                     required
                 />

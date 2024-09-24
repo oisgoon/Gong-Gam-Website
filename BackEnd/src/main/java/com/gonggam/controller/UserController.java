@@ -1,4 +1,3 @@
-// src/main/java/com/gonggam/controller/AuthController.java
 package com.gonggam.controller;
 
 import com.gonggam.entity.User;
@@ -8,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class AuthController {
+public class UserController {
 
     private final UserService userService;
 
-    public AuthController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -28,10 +27,10 @@ public class AuthController {
                 .body("회원가입 실패");
     }
 
-    // 로그인 메서드 추가
+    // 로그인 메서드 수정 (userid와 password로 인증)
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody User user) {
-        boolean isAuthenticated = userService.authenticateUser(user.getUsername(), user.getPassword());
+        boolean isAuthenticated = userService.authenticateUserByUserid(user.getUserid(), user.getPassword());
         return isAuthenticated
                 ? ResponseEntity.ok()
                 .header("Content-Type", "text/plain; charset=UTF-8")

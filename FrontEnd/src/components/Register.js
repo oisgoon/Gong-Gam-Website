@@ -49,39 +49,55 @@ const Message = styled.p`
 const LinkContainer = styled.div`
   margin-top: 15px;
   font-size: 0.9em;
-
   a {
     color: #007bff;
     text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  }
+  a:hover {
+    text-decoration: underline;
   }
 `;
 
 const Register = () => {
+    const [userid, setUserid] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
+    // 영어 소문자 및 숫자만 허용하는 정규식
+    const useridRegex = /^[a-z0-9]+$/;
+
     const handleRegister = async (e) => {
         e.preventDefault();
+
+        // 유효성 검사: userid 형식 확인
+        if (!useridRegex.test(userid)) {
+            setErrorMessage('아이디는 영어 소문자와 숫자만 가능합니다.');
+            return;
+        }
+
+        // 비밀번호 확인 일치 여부
         if (password !== confirmPassword) {
             setErrorMessage('비밀번호가 일치하지 않습니다.');
             return;
         }
+
         try {
+            // 서버로 회원가입 요청
             const response = await fetch('http://localhost:8080/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ userid, username, password }),
             });
+
             if (response.ok) {
                 setSuccessMessage('회원가입 성공!');
                 setErrorMessage('');
+            } else if (response.status === 409) {
+                // 409 상태 코드: 중복된 아이디
+                setErrorMessage('이미 사용 중인 아이디입니다.');
             } else {
                 setErrorMessage('회원가입 실패.');
             }
@@ -96,7 +112,14 @@ const Register = () => {
             <Form onSubmit={handleRegister}>
                 <input
                     type="text"
-                    placeholder="아이디"
+                    placeholder="아이디 (영어 소문자와 숫자만)"
+                    value={userid}
+                    onChange={(e) => setUserid(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="사용자 이름"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -120,10 +143,7 @@ const Register = () => {
                 <button type="submit">회원가입</button>
             </Form>
             <LinkContainer>
-                계정이 있으신가요?{' '}
-                <Link to="/" className="login-link">
-                    로그인
-                </Link>
+                계정이 있으신가요? <Link to="/">로그인</Link>
             </LinkContainer>
         </Container>
     );
