@@ -1,7 +1,55 @@
-// src/components/CreatePost.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles.scss';
+import styled from 'styled-components';
+
+// 스타일 정의
+const Container = styled.div`
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 50vw;
+  height: 50vh;
+  margin: 0 auto;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+  }
+
+  button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 10px;
+
+    &:hover {
+      background-color: #218838;
+    }
+
+    &:nth-of-type(2) {
+      background-color: #007bff;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+`;
 
 const CreatePost = () => {
     const [title, setTitle] = useState('');
@@ -20,7 +68,7 @@ const CreatePost = () => {
                 body: JSON.stringify({ title, content }),
             });
             if (response.ok) {
-                navigate('/'); // 게시글 작성 후 목록으로 이동
+                navigate('/post-list'); // 게시글 작성 후 목록으로 이동
             }
         } catch (error) {
             console.error('게시글 작성 중 오류 발생', error);
@@ -28,9 +76,9 @@ const CreatePost = () => {
     };
 
     return (
-        <div className="container">
+        <Container>
             <h2>게시글 작성</h2>
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     placeholder="제목"
@@ -45,9 +93,9 @@ const CreatePost = () => {
                     required
                 ></textarea>
                 <button type="submit">작성</button>
-                <button type="button" onClick={() => navigate('/')}>뒤로가기</button>
-            </form>
-        </div>
+                <button type="button" onClick={() => navigate('/post-list')}>뒤로가기</button>
+            </Form>
+        </Container>
     );
 };
 
