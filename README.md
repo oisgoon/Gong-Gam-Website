@@ -1,70 +1,119 @@
-# Getting Started with Create React App
+## 설치 및 실행 방법
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 1. 백엔드 (Spring Boot)
 
-## Available Scripts
+1. **프로젝트 클론**:
+    ```bash
+    git clone https://github.com/yourusername/Gong-Gam-Website.git
+    cd Gong-Gam-Website/BackEnd
+    ```
 
-In the project directory, you can run:
+2. **의존성 설치**:
+    ```bash
+    ./gradlew build
+    ```
 
-### `npm start`
+3. **MySQL 데이터베이스 설정**:
+    - MySQL에 `gonggam_db` 데이터베이스를 생성합니다.
+    - `src/main/resources/application.properties`에서 데이터베이스 사용자명과 비밀번호를 설정합니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+4. **서버 실행**:
+    ```bash
+    ./gradlew bootRun
+    ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. 프론트엔드 (React)
 
-### `npm test`
+1. **프로젝트 클론**:
+    ```bash
+    git clone https://github.com/yourusername/Gong-Gam-Website.git
+    cd Gong-Gam-Website/FrontEnd
+    ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **의존성 설치**:
+    ```bash
+    npm install
+    ```
 
-### `npm run build`
+3. **서버 실행**:
+    ```bash
+    npm start
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **애플리케이션 접속**:
+    - 브라우저에서 `http://localhost:3000`으로 접속합니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## API 명세
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### POST `/api/register`
+- **회원가입** API
+- **Request Body**:
+    ```json
+    {
+        "username": "사용자 이름",
+        "password": "비밀번호"
+    }
+    ```
+- **Response**:
+    - 성공: `회원가입 성공`
+    - 실패: `회원가입 실패`
 
-### `npm run eject`
+### POST `/api/login`
+- **로그인** API
+- **Request Body**:
+    ```json
+    {
+        "username": "사용자 이름",
+        "password": "비밀번호"
+    }
+    ```
+- **Response**:
+    - 성공: `로그인 성공`
+    - 실패: `로그인 실패`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### POST `/api/posts`
+- **게시글 작성** API
+- **Request Body**:
+    ```json
+    {
+        "title": "게시글 제목",
+        "content": "게시글 내용"
+    }
+    ```
+- **Response**:
+    - 성공: `게시글 작성 성공`
+    - 실패: `게시글 작성 실패`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### GET `/api/posts`
+- **모든 게시글 조회** API
+- **Response**:
+    ```json
+    [
+        {
+            "id": 1,
+            "title": "게시글 제목",
+            "content": "게시글 내용",
+            "author": "작성자"
+        },
+        ...
+    ]
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 기술 스택
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **프론트엔드**: React, React Router, Axios
+- **백엔드**: Spring Boot, JPA, MySQL
+- **빌드 도구**: Gradle (백엔드), npm (프론트엔드)
+- **데이터베이스**: MySQL
 
-## Learn More
+## 기여 방법
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. 이 저장소를 **포크**합니다.
+2. 새로운 브랜치를 생성합니다 (`git checkout -b feature-branch`).
+3. 변경 사항을 **커밋**합니다 (`git commit -m 'Add some feature'`).
+4. 브랜치에 **푸시**합니다 (`git push origin feature-branch`).
+5. **Pull Request**를 작성합니다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 라이선스
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.

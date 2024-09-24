@@ -1,7 +1,7 @@
 // src/components/Register.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './styles.css';
+import './styles.scss';
 
 const Register = () => {
     const [username, setUsername] = useState('');

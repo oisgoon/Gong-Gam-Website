@@ -4,7 +4,7 @@ import PostList from './PostList';
 import CreatePost from './CreatePost';
 import Login from './Login';
 import Register from './Register';
-import './styles.css';
+import './styles.scss';
 
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false);

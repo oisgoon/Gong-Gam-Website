@@ -1,7 +1,7 @@
 // src/components/CreatePost.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './styles.css';
+import './styles.scss';
 
 const CreatePost = () => {
     const [title, setTitle] = useState('');
