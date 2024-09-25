@@ -30,7 +30,7 @@ public class PostController {
     public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> posts = postService.getAllPosts();
         if (posts.isEmpty()) {
-            return ResponseEntity.noContent().build();  // 게시글이 없으면 204 No Content 응답
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(posts);
     }
@@ -40,12 +40,11 @@ public class PostController {
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         Post post = postService.getPostById(id);
         if (post == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 게시글이 없으면 404 Not Found 응답
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        // 조회수 증가
-        post.setViews(post.getViews() + 1);
-        postService.savePost(post);  // 조회수 증가된 게시글 저장
+        // 조회수 증가 (수정 시간 변경 X)
+        postService.incrementViews(id);
 
         return ResponseEntity.ok(post);
     }

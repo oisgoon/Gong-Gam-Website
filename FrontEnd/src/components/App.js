@@ -6,6 +6,7 @@ import CreatePost from './CreatePost';
 import Login from './Login';
 import Register from './Register';
 import PostDetail from './PostDetail';
+import PostEdit from './PostEdit';
 
 // 스타일 정의
 const AppContainer = styled.div`
@@ -80,6 +81,7 @@ const App = () => {
               <Route path="/post-list" element={<PostList />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/posts/:id" element={<PostDetail />} />
+              <Route path="/edit/:id" element={<PostEdit />} />
             </>
           )}
         </Routes>

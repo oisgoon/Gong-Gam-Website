@@ -1,6 +1,9 @@
 package com.gonggam.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -13,15 +16,20 @@ public class Post {
     private Long id;
 
     private String title;
-    private String content;
     private String author;
 
-    private int views;  // 조회수 필드 추가
-
+    @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedAt;
 
-    // Getter 및 Setter 메서드
+    private int views;
+    private String content;
+
+    // Getter 및 Setter
     public Long getId() {
         return id;
     }
@@ -54,11 +62,11 @@ public class Post {
         this.author = author;
     }
 
-    public int getViews() {  // 조회수 getter
+    public int getViews() {
         return views;
     }
 
-    public void setViews(int views) {  // 조회수 setter
+    public void setViews(int views) {
         this.views = views;
     }
 
@@ -66,27 +74,7 @@ public class Post {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    // 게시글 생성 시 초기 설정
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        views = 0;  // 조회수 초기화
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
     }
 }

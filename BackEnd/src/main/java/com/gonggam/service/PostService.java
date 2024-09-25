@@ -13,9 +13,8 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    // 게시글 저장 메서드 추가
     public void savePost(Post post) {
-        postRepository.save(post);  // 수정된 게시글을 데이터베이스에 저장
+        postRepository.save(post);
     }
 
     public List<Post> getAllPosts() {
@@ -30,13 +29,18 @@ public class PostService {
         postRepository.save(post);
     }
 
+    // 수정: 조회수만 증가시키는 메서드 (수정 시간 변경 X)
+    public void incrementViews(Long id) {
+        postRepository.incrementViews(id);  // 커스텀 쿼리를 사용해 조회수만 증가
+    }
+
     public boolean updatePost(Long id, Post updatedPost) {
         Post existingPost = getPostById(id);
         if (existingPost != null) {
             existingPost.setTitle(updatedPost.getTitle());
             existingPost.setContent(updatedPost.getContent());
             existingPost.setAuthor(updatedPost.getAuthor());
-            postRepository.save(existingPost);  // 수정된 게시글 저장
+            postRepository.save(existingPost);
             return true;
         }
         return false;
