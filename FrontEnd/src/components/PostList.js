@@ -1,4 +1,6 @@
+// src/components/PostList.js
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -10,6 +12,8 @@ const Container = styled.div`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 50vw;
+  max-height: 80vh;
+  overflow-y: auto;
   margin: 0 auto;
 `;
 
@@ -22,25 +26,20 @@ const Post = styled.div`
   text-align: left;
 `;
 
-const PostTitle = styled.div`
+const PostTitle = styled(Link)`
   font-size: 1.2em;
   font-weight: bold;
-  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
-const PostAuthor = styled.div`
+const PostInfo = styled.div`
   font-size: 0.9em;
   color: #555;
-  margin-bottom: 10px;
-`;
-
-const PostContent = styled.div`
-  font-size: 1em;
-`;
-
-const NoPostsMessage = styled.p`
-  font-size: 1.1em;
-  color: #888;
+  margin-top: 5px;
 `;
 
 const PostList = () => {
@@ -49,7 +48,7 @@ const PostList = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axios.get('/api/posts');
+                const response = await axios.get('/api/posts'); // API 호출
                 setPosts(response.data);
             } catch (error) {
                 console.error('Error fetching posts', error);
@@ -65,13 +64,15 @@ const PostList = () => {
             {posts.length > 0 ? (
                 posts.map(post => (
                     <Post key={post.id}>
-                        <PostTitle>{post.title}</PostTitle>
-                        <PostAuthor>작성자: {post.author}</PostAuthor>
-                        <PostContent>{post.content}</PostContent>
+                        <PostTitle to={`/posts/${post.id}`}>{post.title}</PostTitle>
+                        <PostInfo>작성자: {post.author}</PostInfo>
+                        <PostInfo>작성 시각: {new Date(post.createdAt).toLocaleString()}</PostInfo>
+                        <PostInfo>최종 수정 시각: {new Date(post.updatedAt).toLocaleString()}</PostInfo>
+                        <PostInfo>조회수: {post.views}</PostInfo>
                     </Post>
                 ))
             ) : (
-                <NoPostsMessage>게시글이 없습니다.</NoPostsMessage>
+                <p>게시글이 없습니다.</p>
             )}
         </Container>
     );

@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/register", "/api/posts").permitAll()  // 로그인, 회원가입 경로는 허용
+                        .requestMatchers("/api/login", "/api/register", "/api/posts", "/api/posts/*").permitAll()  // 로그인, 회원가입 경로는 허용
                         .anyRequest().authenticated());  // 그 외의 요청은 인증 필요
         return http.build();
     }

@@ -5,6 +5,7 @@ import PostList from './PostList';
 import CreatePost from './CreatePost';
 import Login from './Login';
 import Register from './Register';
+import PostDetail from './PostDetail';
 
 // 스타일 정의
 const AppContainer = styled.div`
@@ -78,6 +79,7 @@ const App = () => {
             <>
               <Route path="/post-list" element={<PostList />} />
               <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/posts/:id" element={<PostDetail />} />
             </>
           )}
         </Routes>

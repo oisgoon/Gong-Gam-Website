@@ -35,13 +35,18 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    // ID로 게시글 하나 가져오기
+    // ID로 게시글 하나 가져오기 (조회수 증가)
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         Post post = postService.getPostById(id);
         if (post == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 게시글이 없으면 404 Not Found 응답
         }
+
+        // 조회수 증가
+        post.setViews(post.getViews() + 1);
+        postService.savePost(post);  // 조회수 증가된 게시글 저장
+
         return ResponseEntity.ok(post);
     }
 
@@ -52,7 +57,7 @@ public class PostController {
         if (isUpdated) {
             return ResponseEntity.ok("게시글 수정 성공");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");  // 상태 코드와 본문 설정
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");
         }
     }
 
@@ -63,7 +68,7 @@ public class PostController {
         if (isDeleted) {
             return ResponseEntity.ok("게시글 삭제 성공");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");  // 상태 코드와 본문 설정
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시글을 찾을 수 없습니다.");
         }
     }
 }
