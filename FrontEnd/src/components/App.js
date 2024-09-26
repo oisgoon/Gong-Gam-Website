@@ -55,10 +55,13 @@ const CreatePostButton = styled(Link)`
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');  // 유저 이름을 저장하는 상태 추가
   const navigate = useNavigate();  // 페이지 이동을 위한 hook
 
-  const handleLoginSuccess = () => {
+  // 로그인 성공 시 username을 받아서 상태에 저장
+  const handleLoginSuccess = (username) => {
     setLoggedIn(true);
+    setUsername(username);  // 로그인된 사용자 이름 저장
     navigate('/post-list');  // 로그인 성공 시 /post-list로 이동
   };
 
@@ -72,13 +75,13 @@ const App = () => {
             <>
               <Route
                 path="/"
-                element={<Login setLoggedIn={handleLoginSuccess} />}
+                element={<Login setLoggedIn={handleLoginSuccess} />}  // 로그인 성공 시 username을 전달받음
               />
               <Route path="/register" element={<Register />} />
             </>
           ) : (
             <>
-              <Route path="/post-list" element={<PostList />} />
+              <Route path="/post-list" element={<PostList username={username} />} />  {/* username을 PostList로 전달 */}
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/posts/:id" element={<PostDetail />} />
               <Route path="/edit/:id" element={<PostEdit />} />

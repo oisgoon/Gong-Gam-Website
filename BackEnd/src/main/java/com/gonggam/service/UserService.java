@@ -27,4 +27,9 @@ public class UserService {
     public boolean isUserIdTaken(String userid) {
         return userRepository.findByUserid(userid) != null;
     }
+
+    public String findUsernameByUserid(String userid) {
+        User user = userRepository.findByUserid(userid);
+        return user != null ? user.getUsername() : null;
+    }
 }

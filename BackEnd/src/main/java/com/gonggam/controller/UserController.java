@@ -2,6 +2,7 @@ package com.gonggam.controller;
 
 import com.gonggam.entity.User;
 import com.gonggam.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,16 +28,33 @@ public class UserController {
                 .body("회원가입 실패");
     }
 
-    // 로그인 메서드 수정 (userid와 password로 인증)
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
+    public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
         boolean isAuthenticated = userService.authenticateUserByUserid(user.getUserid(), user.getPassword());
-        return isAuthenticated
-                ? ResponseEntity.ok()
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .body("로그인 성공")
-                : ResponseEntity.badRequest()
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .body("로그인 실패");
+        if (isAuthenticated) {
+            // 로그인 성공 시 username을 세션에 저장
+            String username = userService.findUsernameByUserid(user.getUserid());
+            session.setAttribute("username", username);
+
+            return ResponseEntity.ok()
+                    .header("Content-Type", "text/plain; charset=UTF-8")
+                    .body("로그인 성공");
+        } else {
+            return ResponseEntity.status(401)
+                    .header("Content-Type", "text/plain; charset=UTF-8")
+                    .body("로그인 실패: 잘못된 아이디 또는 비밀번호");
+        }
+    }
+
+
+    @GetMapping("/me")
+    public ResponseEntity<String> getCurrentUser(HttpSession session) {
+        // 세션에서 username을 가져옴
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            return ResponseEntity.ok(username);  // 로그인한 사용자의 username 반환
+        } else {
+            return ResponseEntity.status(401).body("anonymous");  // 인증되지 않았을 경우 "anonymous" 반환
+        }
     }
 }

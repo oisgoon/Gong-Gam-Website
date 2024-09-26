@@ -1,4 +1,3 @@
-// src/components/PostList.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -42,7 +41,15 @@ const PostInfo = styled.div`
   margin-top: 5px;
 `;
 
-const PostList = () => {
+const Header = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 1.2em;
+  color: #333;
+`;
+
+const PostList = ({ username }) => {  // username을 props로 받음
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -60,6 +67,9 @@ const PostList = () => {
 
     return (
         <Container>
+            {/* 우측 상단에 유저 이름 표시 */}
+            <Header>{username ? `${username}님 반갑습니다!` : '로그인을 해주세요'}</Header>
+            
             <h2>게시글 목록</h2>
             {posts.length > 0 ? (
                 posts.map(post => (
