@@ -68,7 +68,9 @@ const App = () => {
   return (
     <>
       {/* 로그인된 상태에서 유저 이름을 항상 표시 */}
-      {loggedIn && <Header>{username}님 반갑습니다!</Header>}
+      {loggedIn && <Header>{username && userid
+          ? `${username} (${userid})님 반갑습니다!`
+          : "로그인을 해주세요"}</Header>}
 
       {/* 헤더 */}
       <Heading>Gong-Gam 게시판</Heading>
