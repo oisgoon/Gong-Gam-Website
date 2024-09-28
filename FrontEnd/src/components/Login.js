@@ -66,11 +66,12 @@ const ErrorMessage = styled.div`
 const Login = ({ setLoggedIn }) => {
   const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');  // 메시지 상태 추가
+  const [message, setMessage] = useState('');  // 에러 메시지 상태 추가
 
   // 로그인 처리 함수
   const handleLogin = async (e) => {
     e.preventDefault();
+    setMessage(''); // 이전 메시지 초기화
     try {
       const response = await axios.post('http://localhost:8080/api/login', { userid, password }, { withCredentials: true });
       console.log('로그인 성공:', response.data);
@@ -80,8 +81,17 @@ const Login = ({ setLoggedIn }) => {
       console.log('유저 정보:', userInfoResponse.data);
       setLoggedIn(userInfoResponse.data);  // 로그인 성공 시 유저 이름을 전달
     } catch (error) {
+      // 에러 메시지 출력
+      if (error.response) {
+        if (error.response.status === 401) {
+          setMessage('로그인 실패: 잘못된 사용자 이름이나 비밀번호입니다.');
+        } else {
+          setMessage('로그인 중 문제가 발생했습니다.');
+        }
+      } else {
+        setMessage('서버와 연결하는 데 실패했습니다.');
+      }
       console.error('로그인 실패:', error);
-      setMessage('로그인 실패: 잘못된 사용자 이름이나 비밀번호');
     }
   };
 
@@ -105,6 +115,9 @@ const Login = ({ setLoggedIn }) => {
         />
         <button type="submit">로그인</button>
       </Form>
+
+      {/* 에러 메시지 출력 */}
+      {message && <ErrorMessage>{message}</ErrorMessage>}
 
       {/* "계정이 없으신가요?" 부분을 LinkContainer 안에 배치 */}
       <LinkContainer>
