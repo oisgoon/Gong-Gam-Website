@@ -69,7 +69,7 @@ const PostEdit = () => {
         const fetchUserInfo = async () => {
             try {
                 const response = await axios.get('/api/me', { withCredentials: true });
-                setUsername(response.data);  // 로그인한 유저 이름 설정
+                setUsername(response.data.username);  // 로그인한 유저 이름 설정
             } catch (error) {
                 console.error('유저 정보를 불러오는 데 실패했습니다:', error);
             }
@@ -94,10 +94,13 @@ const PostEdit = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setPost((prevPost) => ({
-            ...prevPost,
-            [name]: value
-        }));
+        // author 필드 수정 방지
+        if (name !== 'author') {
+            setPost((prevPost) => ({
+                ...prevPost,
+                [name]: value
+            }));
+        }
     };
 
     const handleFormSubmit = async (e) => {
@@ -110,8 +113,8 @@ const PostEdit = () => {
         }
 
         try {
-            const updatedPost = { ...post, author: username };  // 작성자는 로그인한 유저로 설정
-            await axios.put(`/api/posts/${id}`, updatedPost);
+            const updatedPost = { ...post };  // 작성자는 수정하지 않음
+            await axios.put(`/api/posts/${id}`, updatedPost, { withCredentials: true });
             alert('게시글 수정 완료!');
             navigate(`/posts/${id}`);  // 수정 후 게시글 상세 페이지로 리디렉션
         } catch (error) {
@@ -141,11 +144,11 @@ const PostEdit = () => {
                     onChange={handleInputChange}
                     placeholder="내용을 입력하세요"
                 />
-                {/* 작성자 필드는 로그인한 유저의 이름으로 설정 */}
+                {/* 작성자 필드는 수정 불가능 */}
                 <Input
                     type="text"
                     name="author"
-                    value={username}
+                    value={post.author}
                     readOnly
                 />
                 {error && <ErrorMessage>{error}</ErrorMessage>}  {/* 에러 메시지 표시 */}

@@ -66,32 +66,36 @@ const ErrorMessage = styled.div`
 const Login = ({ setLoggedIn }) => {
   const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');  // 에러 메시지 상태 추가
+  const [message, setMessage] = useState('');  // 메시지 상태 추가
 
   // 로그인 처리 함수
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage(''); // 이전 메시지 초기화
+    setMessage(""); // 이전 메시지 초기화
     try {
-      const response = await axios.post('http://localhost:8080/api/login', { userid, password }, { withCredentials: true });
-      console.log('로그인 성공:', response.data);
+      // 로그인 요청
+      const response = await axios.post(
+        "http://localhost:8080/api/login",
+        { userid, password },
+        { withCredentials: true }
+      );
+      console.log("로그인 성공:", response.data);
 
       // 로그인 성공 시 유저 정보 요청
-      const userInfoResponse = await axios.get('http://localhost:8080/api/me', { withCredentials: true });
-      console.log('유저 정보:', userInfoResponse.data);
-      setLoggedIn(userInfoResponse.data);  // 로그인 성공 시 유저 이름을 전달
+      const userInfoResponse = await axios.get("http://localhost:8080/api/me", {
+        withCredentials: true,
+      });
+      console.log("유저 이름:", userInfoResponse.data.username);
+      console.log("유저 아이디:", userInfoResponse.data.userid);
+
+      setLoggedIn(userInfoResponse.data);
     } catch (error) {
-      // 에러 메시지 출력
-      if (error.response) {
-        if (error.response.status === 401) {
-          setMessage('로그인 실패: 잘못된 사용자 이름이나 비밀번호입니다.');
-        } else {
-          setMessage('로그인 중 문제가 발생했습니다.');
-        }
+      // 에러 메시지 처리
+      if (error.response && error.response.status === 401) {
+        setMessage("로그인 실패: 잘못된 사용자 이름이나 비밀번호입니다.");
       } else {
-        setMessage('서버와 연결하는 데 실패했습니다.');
+        setMessage("로그인 중 문제가 발생했습니다.");
       }
-      console.error('로그인 실패:', error);
     }
   };
 

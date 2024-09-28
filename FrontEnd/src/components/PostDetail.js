@@ -28,11 +28,31 @@ const Button = styled.button`
   }
 `;
 
+// 날짜 포맷팅 함수
+const formatDate = (dateArray) => {
+  if (Array.isArray(dateArray)) {
+    const [year, month, day, hour, minute, second] = dateArray;
+    const date = new Date(year, month - 1, day, hour, minute, second);
+    if (isNaN(date.getTime())) {
+      return "-";
+    }
+    return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+  } else {
+    const date = new Date(dateArray);
+    if (isNaN(date.getTime())) {
+      return "-";
+    }
+    return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+  }
+};
+
 const PostDetail = () => {
     const { id } = useParams(); // URL에서 id를 가져옴
     const [post, setPost] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null); // 로그인한 사용자 정보
     const navigate = useNavigate(); // 수정 페이지로 이동을 위한 hook
 
+    // 게시글과 현재 로그인한 사용자 정보 가져오기
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -43,11 +63,20 @@ const PostDetail = () => {
             }
         };
 
+        const fetchCurrentUser = async () => {
+            try {
+                const response = await axios.get('/api/me', { withCredentials: true });
+                setCurrentUser(response.data); // 로그인한 사용자 정보 저장
+            } catch (error) {
+                console.error('Error fetching current user', error);
+            }
+        };
+
         fetchPost();
+        fetchCurrentUser();
     }, [id]);
 
-    // 게시글이 로딩 중일 때
-    if (!post) {
+    if (!post || !currentUser) {
         return <p>게시글을 불러오는 중입니다...</p>;
     }
 
@@ -60,17 +89,16 @@ const PostDetail = () => {
         <Container>
             <h2>{post.title}</h2>
             <p>작성자: {post.author}</p>
-            <p>작성 시각: {new Date(post.createdAt).toLocaleString()}</p>
-
-            {/* 수정 시각이 null이면 '-'로 표시 */}
-            <p>최종 수정 시각: {post.updatedAt ? new Date(post.updatedAt).toLocaleString() : '-'}</p>
-
+            <p>작성 시각: {formatDate(post.createdAt)}</p>
+            <p>최종 수정 시각: {post.updatedAt ? formatDate(post.updatedAt) : '-'}</p>
             <p>조회수: {post.views}</p>
             <hr />
             <p>{post.content}</p>
 
-            {/* 수정 버튼 추가 */}
-            <Button onClick={handleEditClick}>수정하기</Button>
+            {/* 현재 로그인한 사용자의 id와 게시글 작성자의 id가 일치할 때만 수정 버튼 표시 */}
+            {currentUser.userid === post.userid && (
+                <Button onClick={handleEditClick}>수정하기</Button>
+            )}
         </Container>
     );
 };

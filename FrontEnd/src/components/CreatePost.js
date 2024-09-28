@@ -63,7 +63,7 @@ const CreatePost = () => {
         const fetchUserInfo = async () => {
             try {
                 const response = await axios.get('/api/me', { withCredentials: true });
-                setAuthor(response.data);  // 유저 이름을 상태에 저장
+                setAuthor(response.data.username);  // 유저 이름을 상태에 저장
             } catch (error) {
                 console.error('유저 정보를 불러오는 데 실패했습니다.', error);
             }
@@ -76,14 +76,11 @@ const CreatePost = () => {
         e.preventDefault();
         try {
             // 게시글 작성 API 호출
-            const response = await fetch('/api/posts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title, content, author }),  // author 포함하여 전송
-            });
-            if (response.ok) {
+            const response = await axios.post('/api/posts', 
+                { title, content, author },
+                { withCredentials: true }
+            );
+            if (response.status === 200) {
                 navigate('/post-list'); // 게시글 작성 후 목록으로 이동
             }
         } catch (error) {

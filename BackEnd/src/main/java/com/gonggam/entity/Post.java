@@ -1,10 +1,6 @@
 package com.gonggam.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,16 +14,29 @@ public class Post {
     private String title;
     private String author;
 
-    @CreationTimestamp
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private String userid;  // userid 필드 추가
+
+    private String content;
+    private int views;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    private int views;
-    private String content;
+    // 엔티티가 처음 persist 될 때 호출되어 생성 시간을 설정
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();  // 처음 생성 시에도 updatedAt을 설정
+    }
+
+    // 엔티티가 업데이트 될 때 호출되어 수정 시간을 설정
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     // Getter 및 Setter
     public Long getId() {
@@ -62,6 +71,14 @@ public class Post {
         this.author = author;
     }
 
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
     public int getViews() {
         return views;
     }
@@ -77,4 +94,6 @@ public class Post {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    // createdAt과 updatedAt의 Setter는 제거하여 무결성을 유지
 }

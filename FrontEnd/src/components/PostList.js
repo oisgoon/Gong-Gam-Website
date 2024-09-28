@@ -49,35 +49,82 @@ const Header = styled.div`
   color: #333;
 `;
 
-const PostList = ({ username }) => {  // username을 props로 받음
+const PostList = () => {
   const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState(""); // 유저 이름 상태 추가
+  const [userid, setUserid] = useState(""); // 유저 아이디 상태 추가
 
+  // 게시글 목록 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('/api/posts');  // API 호출
+        const response = await axios.get("/api/posts");
         setPosts(response.data);
       } catch (error) {
-        console.error('Error fetching posts', error);
+        console.error("Error fetching posts", error);
       }
     };
 
     fetchPosts();
   }, []);
 
+  // 로그인된 유저 정보 가져오기
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get("/api/me", { withCredentials: true });
+        if (response.data.userid && response.data.username) {
+          setUsername(response.data.username);
+          setUserid(response.data.userid);
+        }
+      } catch (error) {
+        console.error("Error fetching user info", error);
+        setUsername("");
+        setUserid("");
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  // 날짜 포맷팅 함수
+  const formatDate = (dateArray) => {
+    if (Array.isArray(dateArray)) {
+      // 배열을 전달받았을 경우: [year, month, day, hour, minute, second, nanosecond]
+      // JavaScript의 Date 객체는 month가 0부터 시작하므로, month에서 -1을 해야 함
+      const [year, month, day, hour, minute, second] = dateArray;
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      if (isNaN(date.getTime())) {
+        return "-"; // 유효하지 않은 날짜
+      }
+      return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+    } else {
+      // 배열이 아닌 경우 기존 처리
+      const date = new Date(dateArray);
+      if (isNaN(date.getTime())) {
+        return "-"; // 유효하지 않은 날짜
+      }
+      return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+    }
+  };
+
   return (
     <Container>
-      {/* 우측 상단에 유저 이름 표시 */}
-      <Header>{username ? `${username}님 반갑습니다!` : '로그인을 해주세요'}</Header>
+      {/* 우측 상단에 유저 이름과 아이디 표시 */}
+      <Header>
+        {username && userid
+          ? `${username} (${userid})님 반갑습니다!`
+          : "로그인을 해주세요"}
+      </Header>
 
       <h2>게시글 목록</h2>
       {posts.length > 0 ? (
-        posts.map(post => (
+        posts.map((post) => (
           <Post key={post.id}>
             <PostTitle to={`/posts/${post.id}`}>{post.title}</PostTitle>
             <PostInfo>작성자: {post.author}</PostInfo>
-            <PostInfo>작성 시각: {new Date(post.createdAt).toLocaleString()}</PostInfo>
-            <PostInfo>최종 수정 시각: {new Date(post.updatedAt).toLocaleString()}</PostInfo>
+            <PostInfo>작성 시각: {formatDate(post.createdAt)}</PostInfo>
+            <PostInfo>최종 수정 시각: {formatDate(post.updatedAt)}</PostInfo>
             <PostInfo>조회수: {post.views}</PostInfo>
           </Post>
         ))

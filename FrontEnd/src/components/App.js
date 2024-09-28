@@ -53,13 +53,15 @@ const CreatePostButton = styled(Link)`
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState('');  // 유저 이름 상태
+  const [userid, setUserid] = useState('');      // 유저 ID 상태
 
   const navigate = useNavigate();  // 페이지 이동을 위한 hook
 
-  // 로그인 성공 시 username을 받아서 상태에 저장
-  const handleLoginSuccess = (username) => {
+  // 로그인 성공 시 userid와 username을 받아서 상태에 저장
+  const handleLoginSuccess = ({ userid, username }) => {
     setLoggedIn(true);
     setUsername(username);  // 로그인된 사용자 이름 저장
+    setUserid(userid);      // 로그인된 사용자 ID 저장
     navigate('/post-list');  // 로그인 성공 시 /post-list로 이동
   };
 
@@ -76,16 +78,16 @@ const App = () => {
             <>
               <Route
                 path="/"
-                element={<Login setLoggedIn={handleLoginSuccess} />}  // 로그인 성공 시 username을 전달받음
+                element={<Login setLoggedIn={handleLoginSuccess} />}  // 로그인 성공 시 userid와 username을 전달받음
               />
               <Route path="/register" element={<Register />} />
             </>
           ) : (
             <>
-              <Route path="/post-list" element={<PostList username={username} />} />  {/* username을 PostList로 전달 */}
-              <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/posts/:id" element={<PostDetail />} />
-              <Route path="/edit/:id" element={<PostEdit />} />
+              <Route path="/post-list" element={<PostList username={username} userid={userid} />} />  {/* userid와 username을 PostList로 전달 */}
+              <Route path="/create-post" element={<CreatePost userid={userid} />} />  {/* userid를 CreatePost로 전달 */}
+              <Route path="/posts/:id" element={<PostDetail userid={userid} />} />  {/* userid를 PostDetail로 전달 */}
+              <Route path="/edit/:id" element={<PostEdit userid={userid} />} />  {/* userid를 PostEdit로 전달 */}
             </>
           )}
         </Routes>

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -21,7 +22,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/login", "/api/register", "/api/posts", "/api/posts/*", "/api/me").permitAll()  // 특정 경로는 인증 없이 허용
                         .anyRequest().authenticated())  // 그 외의 모든 요청은 인증이 필요
                 .sessionManagement(session -> session
-                        .sessionFixation().migrateSession())  // 세션 고정 공격 보호 및 세션 고정
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // 세션이 없을 경우 생성
+//                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)  // 세션을 항상 생성
+                        .sessionFixation().migrateSession())  // 세션 고정 공격 방지
                 .logout(logout -> logout
                         .logoutUrl("/api/logout")
                         .logoutSuccessUrl("/login"));
@@ -33,7 +36,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);  // 세션 쿠키 허용
-        configuration.addAllowedOrigin("http://localhost:3000/");  // 프론트엔드 주소 허용
+        configuration.addAllowedOrigin("http://localhost:3000");  // 프론트엔드 주소 허용 (슬래시 제거)
         configuration.addAllowedHeader("*");  // 모든 헤더 허용
         configuration.addAllowedMethod("*");  // 모든 HTTP 메서드 허용 (GET, POST, 등)
 

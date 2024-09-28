@@ -6,6 +6,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -16,6 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // 회원가입
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         boolean isRegistered = userService.registerUser(user);
@@ -28,13 +32,15 @@ public class UserController {
                 .body("회원가입 실패");
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
         boolean isAuthenticated = userService.authenticateUserByUserid(user.getUserid(), user.getPassword());
         if (isAuthenticated) {
-            // 로그인 성공 시 username을 세션에 저장
+            // 로그인 성공 시 userid와 username을 세션에 저장
             String username = userService.findUsernameByUserid(user.getUserid());
-            session.setAttribute("username", username);
+            session.setAttribute("userid", user.getUserid());  // userid도 세션에 저장
+            session.setAttribute("username", username);  // username도 세션에 저장
 
             return ResponseEntity.ok()
                     .header("Content-Type", "text/plain; charset=UTF-8")
@@ -46,15 +52,20 @@ public class UserController {
         }
     }
 
-
+    // 로그인된 사용자 정보 가져오기
     @GetMapping("/me")
-    public ResponseEntity<String> getCurrentUser(HttpSession session) {
-        // 세션에서 username을 가져옴
+
+    public ResponseEntity<Map<String, String>> getCurrentUser(HttpSession session) {
+        String userid = (String) session.getAttribute("userid");
         String username = (String) session.getAttribute("username");
-        if (username != null) {
-            return ResponseEntity.ok(username);  // 로그인한 사용자의 username 반환
+
+        if (userid != null && username != null) {
+            Map<String, String> userInfo = new HashMap<>();
+            userInfo.put("userid", userid);  // 세션에서 userid 가져옴
+            userInfo.put("username", username);  // 세션에서 username 가져옴
+            return ResponseEntity.ok(userInfo);
         } else {
-            return ResponseEntity.status(401).body("anonymous");  // 인증되지 않았을 경우 "anonymous" 반환
+            return ResponseEntity.status(401).body(null);  // 인증되지 않은 경우 401 반환
         }
     }
 }
