@@ -50,42 +50,42 @@ const Header = styled.div`
 `;
 
 const PostList = ({ username }) => {  // username을 props로 받음
-    const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await axios.get('/api/posts'); // API 호출
-                setPosts(response.data);
-            } catch (error) {
-                console.error('Error fetching posts', error);
-            }
-        };
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('/api/posts');  // API 호출
+        setPosts(response.data);
+      } catch (error) {
+        console.error('Error fetching posts', error);
+      }
+    };
 
-        fetchPosts();
-    }, []);
+    fetchPosts();
+  }, []);
 
-    return (
-        <Container>
-            {/* 우측 상단에 유저 이름 표시 */}
-            <Header>{username ? `${username}님 반갑습니다!` : '로그인을 해주세요'}</Header>
-            
-            <h2>게시글 목록</h2>
-            {posts.length > 0 ? (
-                posts.map(post => (
-                    <Post key={post.id}>
-                        <PostTitle to={`/posts/${post.id}`}>{post.title}</PostTitle>
-                        <PostInfo>작성자: {post.author}</PostInfo>
-                        <PostInfo>작성 시각: {new Date(post.createdAt).toLocaleString()}</PostInfo>
-                        <PostInfo>최종 수정 시각: {new Date(post.updatedAt).toLocaleString()}</PostInfo>
-                        <PostInfo>조회수: {post.views}</PostInfo>
-                    </Post>
-                ))
-            ) : (
-                <p>게시글이 없습니다.</p>
-            )}
-        </Container>
-    );
+  return (
+    <Container>
+      {/* 우측 상단에 유저 이름 표시 */}
+      <Header>{username ? `${username}님 반갑습니다!` : '로그인을 해주세요'}</Header>
+
+      <h2>게시글 목록</h2>
+      {posts.length > 0 ? (
+        posts.map(post => (
+          <Post key={post.id}>
+            <PostTitle to={`/posts/${post.id}`}>{post.title}</PostTitle>
+            <PostInfo>작성자: {post.author}</PostInfo>
+            <PostInfo>작성 시각: {new Date(post.createdAt).toLocaleString()}</PostInfo>
+            <PostInfo>최종 수정 시각: {new Date(post.updatedAt).toLocaleString()}</PostInfo>
+            <PostInfo>조회수: {post.views}</PostInfo>
+          </Post>
+        ))
+      ) : (
+        <p>게시글이 없습니다.</p>
+      )}
+    </Container>
+  );
 };
 
 export default PostList;

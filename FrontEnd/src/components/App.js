@@ -24,17 +24,14 @@ const Heading = styled.h1`
   margin-bottom: 20px;
 `;
 
-const Container = styled.div`
-  background-color: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 50vw;
-  height: 50vh;
+const Header = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 1.2em;
+  color: #333;
 `;
 
-// 게시글 작성 버튼 스타일
 const CreatePostButton = styled(Link)`
   position: fixed;
   bottom: 30px;
@@ -55,7 +52,8 @@ const CreatePostButton = styled(Link)`
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');  // 유저 이름을 저장하는 상태 추가
+  const [username, setUsername] = useState('');  // 유저 이름 상태
+
   const navigate = useNavigate();  // 페이지 이동을 위한 hook
 
   // 로그인 성공 시 username을 받아서 상태에 저장
@@ -67,7 +65,10 @@ const App = () => {
 
   return (
     <>
-      {/* Heading을 Routes 밖에 배치하여 항상 보이도록 함 */}
+      {/* 로그인된 상태에서 유저 이름을 항상 표시 */}
+      {loggedIn && <Header>{username}님 반갑습니다!</Header>}
+
+      {/* 헤더 */}
       <Heading>Gong-Gam 게시판</Heading>
       <AppContainer>
         <Routes>

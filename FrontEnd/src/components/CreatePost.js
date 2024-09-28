@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 // 스타일 정의
 const Container = styled.div`
@@ -54,7 +55,22 @@ const Form = styled.form`
 const CreatePost = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [author, setAuthor] = useState('');  // 로그인한 사용자의 이름
     const navigate = useNavigate();
+
+    // 로그인한 유저 정보 가져오기
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await axios.get('/api/me', { withCredentials: true });
+                setAuthor(response.data);  // 유저 이름을 상태에 저장
+            } catch (error) {
+                console.error('유저 정보를 불러오는 데 실패했습니다.', error);
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,7 +81,7 @@ const CreatePost = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ title, content }),
+                body: JSON.stringify({ title, content, author }),  // author 포함하여 전송
             });
             if (response.ok) {
                 navigate('/post-list'); // 게시글 작성 후 목록으로 이동

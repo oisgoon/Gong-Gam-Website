@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 스타일 정의
@@ -64,37 +64,24 @@ const ErrorMessage = styled.div`
 `;
 
 const Login = ({ setLoggedIn }) => {
-  const [userid, setUsername] = useState('');
+  const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(''); // 메시지 상태 추가
+  const [message, setMessage] = useState('');  // 메시지 상태 추가
 
-  // 유저 정보를 요청하는 함수 추가
-  const fetchUserInfo = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/me', { withCredentials: true });
-      console.log('유저 이름:', response.data);  // 콘솔에 유저 정보 출력
-      return response.data;  // 유저 이름을 반환
-    } catch (error) {
-      console.error('유저 정보를 불러오는 데 실패했습니다:', error);
-    }
-  };
-
+  // 로그인 처리 함수
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/login",
-        { userid, password },
-        { withCredentials: true } // 세션 쿠키 전송을 위해 설정
-      );
-      console.log(response);
+      const response = await axios.post('http://localhost:8080/api/login', { userid, password }, { withCredentials: true });
+      console.log('로그인 성공:', response.data);
 
-      // 로그인 후 유저 정보 요청 및 로그인 성공 처리
-      const username = await fetchUserInfo();
-      setLoggedIn(username); // 로그인 성공 상태 업데이트 및 유저 이름 전달
-
+      // 로그인 성공 시 유저 정보 요청
+      const userInfoResponse = await axios.get('http://localhost:8080/api/me', { withCredentials: true });
+      console.log('유저 정보:', userInfoResponse.data);
+      setLoggedIn(userInfoResponse.data);  // 로그인 성공 시 유저 이름을 전달
     } catch (error) {
-      setMessage("로그인 실패: 잘못된 사용자 이름이나 비밀번호");
+      console.error('로그인 실패:', error);
+      setMessage('로그인 실패: 잘못된 사용자 이름이나 비밀번호');
     }
   };
 
@@ -106,7 +93,7 @@ const Login = ({ setLoggedIn }) => {
           type="text"
           placeholder="아이디"
           value={userid}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUserid(e.target.value)}
           required
         />
         <input
@@ -118,9 +105,6 @@ const Login = ({ setLoggedIn }) => {
         />
         <button type="submit">로그인</button>
       </Form>
-
-      {/* 에러 메시지 출력 */}
-      {message && <ErrorMessage>{message}</ErrorMessage>}
 
       {/* "계정이 없으신가요?" 부분을 LinkContainer 안에 배치 */}
       <LinkContainer>
