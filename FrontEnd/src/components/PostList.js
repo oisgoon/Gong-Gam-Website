@@ -96,7 +96,7 @@ const formatDate = (dateArray) => {
         const [year, month, day, hour, minute, second] = dateArray;
         const date = new Date(year, month - 1, day, hour, minute, second);
         if (isNaN(date.getTime())) {
-            return '-'; // 유효하지 않은 날짜
+          return "-"; // 유효하지 않은 날짜
         }
         return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
     } else {
@@ -111,7 +111,6 @@ const formatDate = (dateArray) => {
   return (
     <Container>
       {/* 우측 상단에 유저 이름과 아이디 표시 */}
-      <Header>{username && userid ? `${username} (${userid})님 반갑습니다!` : '로그인을 해주세요'}</Header>
 
       <h2>게시글 목록</h2>
       {posts.length > 0 ? (
