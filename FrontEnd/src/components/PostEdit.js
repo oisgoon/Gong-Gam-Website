@@ -70,6 +70,7 @@ const PostEdit = () => {
             try {
                 const response = await axios.get('/api/me', { withCredentials: true });
                 setUsername(response.data.username);  // 로그인한 유저 이름 설정
+                console.log(username);
             } catch (error) {
                 console.error('유저 정보를 불러오는 데 실패했습니다:', error);
             }
@@ -90,7 +91,7 @@ const PostEdit = () => {
 
         fetchUserInfo();  // 유저 정보 불러오기
         fetchPost();  // 게시글 정보 불러오기
-    }, [id]);
+    }, [id, username]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

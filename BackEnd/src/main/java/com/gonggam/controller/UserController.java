@@ -2,6 +2,9 @@ package com.gonggam.controller;
 
 import com.gonggam.entity.User;
 import com.gonggam.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,21 +37,22 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user, HttpSession session) {
         boolean isAuthenticated = userService.authenticateUserByUserid(user.getUserid(), user.getPassword());
-        if (isAuthenticated) {
-            // 로그인 성공 시 userid와 username을 세션에 저장
-            String username = userService.findUsernameByUserid(user.getUserid());
-            session.setAttribute("userid", user.getUserid());  // userid도 세션에 저장
-            session.setAttribute("username", username);  // username도 세션에 저장
+        Map<String, String> response = new HashMap<>();
 
-            return ResponseEntity.ok()
-                    .header("Content-Type", "text/plain; charset=UTF-8")
-                    .body("로그인 성공");
+        if (isAuthenticated) {
+            String username = userService.findUsernameByUserid(user.getUserid());
+            session.setAttribute("userid", user.getUserid());
+            session.setAttribute("username", username);
+
+            response.put("message", "로그인 성공");
+            response.put("userid", user.getUserid());
+            response.put("username", username);
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401)
-                    .header("Content-Type", "text/plain; charset=UTF-8")
-                    .body("로그인 실패: 잘못된 아이디 또는 비밀번호");
+            response.put("message", "로그인 실패: 잘못된 아이디 또는 비밀번호");
+            return ResponseEntity.status(401).body(response);
         }
     }
 
@@ -67,5 +71,21 @@ public class UserController {
         } else {
             return ResponseEntity.status(401).body(null);  // 인증되지 않은 경우 401 반환
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 세션 무효화
+        request.getSession().invalidate();
+
+        // 로그아웃 후 쿠키를 삭제
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setHttpOnly(true);  // XSS 공격 방지
+        cookie.setSecure(true);  // HTTPS에서만 쿠키 전송
+        cookie.setMaxAge(0);  // 즉시 쿠키 삭제
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
     }
 }

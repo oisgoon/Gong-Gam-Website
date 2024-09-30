@@ -41,14 +41,6 @@ const PostInfo = styled.div`
   margin-top: 5px;
 `;
 
-const Header = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 1.2em;
-  color: #333;
-`;
-
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [username, setUsername] = useState(''); // 유저 이름 상태 추가
@@ -60,13 +52,15 @@ const PostList = () => {
       try {
         const response = await axios.get('/api/posts');
         setPosts(response.data);
+        console.log(username);
+        console.log(userid);
       } catch (error) {
         console.error('Error fetching posts', error);
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [userid, username]);
 
   // 로그인된 유저 정보 가져오기
   useEffect(() => {
@@ -88,9 +82,8 @@ const PostList = () => {
   }, []);
 
   // 날짜 포맷팅 함수
-  // 날짜 포맷팅 함수
-const formatDate = (dateArray) => {
-    if (Array.isArray(dateArray)) {
+  const formatDate = (dateArray) => {
+      if (Array.isArray(dateArray)) {
         // 배열을 전달받았을 경우: [year, month, day, hour, minute, second, nanosecond]
         // JavaScript의 Date 객체는 month가 0부터 시작하므로, month에서 -1을 해야 함
         const [year, month, day, hour, minute, second] = dateArray;
@@ -98,16 +91,17 @@ const formatDate = (dateArray) => {
         if (isNaN(date.getTime())) {
           return "-"; // 유효하지 않은 날짜
         }
-        return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
-    } else {
-        // 배열이 아닌 경우 기존 처리
-        const date = new Date(dateArray);
-        if (isNaN(date.getTime())) {
-            return '-'; // 유효하지 않은 날짜
-        }
-        return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
-    }
-};
+        return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+      } else {
+          // 배열이 아닌 경우 기존 처리
+          const date = new Date(dateArray);
+          if (isNaN(date.getTime())) {
+              return '-'; // 유효하지 않은 날짜
+          }
+          return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+      }
+  };
+  
   return (
     <Container>
       {/* 우측 상단에 유저 이름과 아이디 표시 */}
