@@ -20,8 +20,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login", "/api/register", "/api/posts", "/api/posts/*", "/api/me", "/api/logout", "/login", "/").permitAll()  // 특정 경로는 인증 없이 허용
-                        .anyRequest().authenticated())  // 그 외의 모든 요청은 인증이 필요
+                        .requestMatchers("/api/login", "/api/register", "/api/posts", "/api/posts/*", "/api/me", "/api/logout", "/login", "/", "/api/comments", "/api/posts/{postId}/comments").permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)  // 세션을 항상 생성
                         .invalidSessionUrl("/")  // 세션 만료 시 리디렉션 경로
