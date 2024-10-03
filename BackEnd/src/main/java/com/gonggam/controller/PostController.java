@@ -38,5 +38,5 @@ public class PostController {
         return ResponseEntity.ok("게시글 작성 성공");
     }
 
-    // 다른 CRUD 메서드들도 필요에 따라 추가...
+    // 다른 CRUD 메서드들도 필요에 따라 추가 가능
 }

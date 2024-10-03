@@ -1,9 +1,13 @@
 package com.gonggam.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts")  // 테이블 이름을 명시적으로 설정
 public class Post {
 
     @Id
@@ -13,9 +17,17 @@ public class Post {
     private String title;
     private String content;
     private String author;
-    private int views;  // 조회수 필드 추가
 
-    // Getter 및 Setter
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private int views;
+
+    // Getter 및 Setter 추가
+
     public Long getId() {
         return id;
     }
@@ -48,11 +60,19 @@ public class Post {
         this.author = author;
     }
 
-    public int getViews() {  // 조회수 Getter
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public int getViews() {
         return views;
     }
 
-    public void setViews(int views) {  // 조회수 Setter
+    public void setViews(int views) {
         this.views = views;
     }
 }
