@@ -51,14 +51,16 @@ const PostList = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get('/api/posts');
-        console.log("Posts data:", response.data);  // 서버에서 받아온 데이터 확인
         setPosts(response.data);
+        console.log(username);
+        console.log(userid);
       } catch (error) {
         console.error('Error fetching posts', error);
       }
     };
+
     fetchPosts();
-  }, []);
+  }, [userid, username]);
 
   // 로그인된 유저 정보 가져오기
   useEffect(() => {
@@ -109,7 +111,7 @@ const PostList = () => {
         posts.map(post => (
           <Post key={post.id}>
             <PostTitle to={`/posts/${post.id}`}>{post.title}</PostTitle>
-            <PostInfo>작성자: {post.author}</PostInfo>
+            <PostInfo>작성자: {post.author}({post.userid})</PostInfo>
             <PostInfo>작성 시각: {formatDate(post.createdAt)}</PostInfo>
             <PostInfo>최종 수정 시각: {formatDate(post.updatedAt)}</PostInfo>
             <PostInfo>조회수: {post.views}</PostInfo>

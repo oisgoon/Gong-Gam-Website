@@ -29,7 +29,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    // 조회수만 증가시키는 메서드 (수정 시간 변경 X)
+    // 수정: 조회수만 증가시키는 메서드 (수정 시간 변경 X)
     public void incrementViews(Long id) {
         postRepository.incrementViews(id);  // 커스텀 쿼리를 사용해 조회수만 증가
     }
@@ -40,7 +40,7 @@ public class PostService {
             existingPost.setTitle(updatedPost.getTitle());
             existingPost.setContent(updatedPost.getContent());
             existingPost.setAuthor(updatedPost.getAuthor());
-            postRepository.save(existingPost);  // updatedAt은 자동으로 갱신됨
+            postRepository.save(existingPost);
             return true;
         }
         return false;
