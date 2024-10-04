@@ -102,7 +102,9 @@ const PostDetail = () => {
           const response = await axios.get("/api/me", {
             withCredentials: true,
           });
-          setCurrentUser(response.data); // 로그인한 사용자 정보 저장
+          console.log("ID : " + response.data.userid);
+          console.log("NAME : " + response.data.username);
+          setCurrentUser(response); // 로그인한 사용자 정보 저장
         } catch (error) {
           console.error("Error fetching current user", error);
         }
@@ -122,7 +124,6 @@ const PostDetail = () => {
       fetchPost();
       fetchCurrentUser();
       fetchComments();
-      console.log("댓글 목록" + comments);
     }, [id]);
 
     if (!post || !currentUser) {
@@ -131,18 +132,32 @@ const PostDetail = () => {
 
     // 댓글 작성 핸들러
     const handleCommentSubmit = async () => {
-        try {
-            const response = await axios.post(`/api/posts/${id}/comments`, {
-                content: newComment,
-            }, { withCredentials: true });
-            
-            // 댓글 목록을 업데이트하고 입력란을 초기화
-            setComments([...comments, response.data]);
-            setNewComment("");
-            console.log("댓글 작성후 : " + comments);
-        } catch (error) {
-            console.error('Error submitting comment', error);
-        }
+      try {
+        const response = await axios.post(
+          `/api/posts/${id}/comments`,
+          {
+            content: newComment,
+          },
+          { withCredentials: true }
+        );
+        console.log(response.data);
+        // 댓글 목록을 다시 가져와서 업데이트
+        const fetchComments = async () => {
+          try {
+            const response = await axios.get(`/api/posts/${id}/comments`, {
+              withCredentials: true,
+            });
+            setComments(response.data); // 댓글 데이터 설정
+          } catch (error) {
+            console.error("Error fetching comments", error);
+          }
+        };
+
+        await fetchComments(); // 댓글 목록 갱신
+        setNewComment(""); // 입력란 초기화
+      } catch (error) {
+        console.error("Error submitting comment", error);
+      }
     };
 
     // 수정 버튼 클릭 시 실행되는 함수

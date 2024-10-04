@@ -17,12 +17,22 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    // 생성자, getter, setter
+    // 기본 생성자
     public Comment() {}
 
+    // 생성자 (내용과 게시글을 설정하는 용도)
     public Comment(String content, Post post) {
         this.content = content;
         this.post = post;
+    }
+
+    // Getter와 Setter
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getContent() {

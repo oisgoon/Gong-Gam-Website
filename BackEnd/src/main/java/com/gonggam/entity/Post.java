@@ -1,12 +1,18 @@
 package com.gonggam.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "posts")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Post {
 
+    // Getter 및 Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,61 +44,28 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getter 및 Setter
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getAuthor() {
-        return author;
     }
 
     public void setAuthor(String author) {
         this.author = author;
     }
 
-    public String getUserid() {
-        return userid;
-    }
-
     public void setUserid(String userid) {
         this.userid = userid;
     }
 
-    public int getViews() {
-        return views;
-    }
-
     public void setViews(int views) {
         this.views = views;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 
     // createdAt과 updatedAt의 Setter는 제거하여 무결성을 유지

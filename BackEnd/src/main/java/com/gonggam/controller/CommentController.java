@@ -30,16 +30,13 @@ public class CommentController {
         comment.setPost(post); // comment에 post 설정
 
         commentService.createComment(comment, postId);
-        System.out.println("댓글 내용: " + comment.getContent());
-        System.out.println("게시글: " + comment.getPost().getId());
         return ResponseEntity.ok("댓글 작성 성공");
     }
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getComments(@PathVariable Long postId) {
+    public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long postId) {
+        System.out.println("postId: " + postId); // 로그 추가
         List<Comment> comments = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(comments);
     }
-
-    // 댓글 수정 및 삭제 메서드 추가 가능
 }

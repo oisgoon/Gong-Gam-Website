@@ -52,15 +52,13 @@ const PostList = () => {
       try {
         const response = await axios.get('/api/posts');
         setPosts(response.data);
-        console.log(username);
-        console.log(userid);
       } catch (error) {
         console.error('Error fetching posts', error);
       }
     };
 
     fetchPosts();
-  }, [userid, username]);
+  }, []);
 
   // 로그인된 유저 정보 가져오기
   useEffect(() => {
@@ -70,6 +68,8 @@ const PostList = () => {
         if (response.data.userid && response.data.username) {
           setUsername(response.data.username);
           setUserid(response.data.userid);
+          console.log("유저 정보 :" + response.data.username);
+          console.log("유저 정보 :" + response.data.userid);
         }
       } catch (error) {
         console.error('Error fetching user info', error);
