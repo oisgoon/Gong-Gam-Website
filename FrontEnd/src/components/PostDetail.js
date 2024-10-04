@@ -190,7 +190,7 @@ const PostDetail = () => {
           <CommentList>
             {comments.map((comment, index) => (
               <CommentItem key={index}>
-                <strong>{comment.author}:</strong> {comment.content}
+                <strong>{comment.author}({comment.userId}) :</strong> {comment.content}
                 <br />
                 <small>{formatDate(comment.createdAt)}</small>
               </CommentItem>
