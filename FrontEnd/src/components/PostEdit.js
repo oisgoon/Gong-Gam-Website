@@ -8,8 +8,19 @@ const Container = styled.div`
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  width: 70vw;
   margin: 0 auto;
+  width: 50vw; /* 가로 크기 설정 */
+`;
+
+const Title = styled.h2`
+  text-align: center; /* 가운데 정렬 */
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  height: 80%; /* 폼 높이를 전체 높이에 맞춤 */
+  justify-content: space-between; /* 요소 간격을 균등하게 배치 */
 `;
 
 const Input = styled.input`
@@ -17,31 +28,41 @@ const Input = styled.input`
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
-  height: 150px;
+  height: 180px; /* 고정된 높이 설정 */
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 4px;
+  resize: none; /* 크기 조정 비활성화 */
+  overflow-y: auto; /* 수직 스크롤바 사용 */
+  box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
 `;
 
 const Button = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
+  padding: 10px 20px; /* 버튼 크기 조정 */
+  background-color: #4caf50; /* 작성 버튼 색상 */
   color: white;
-  border: none;
+  border: none; /* 테두리 제거 */
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  
+
   &:hover {
-    background-color: #45a049;
+    background-color: #45a049; /* 작성 버튼 hover 색상 */
   }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+  margin-top: auto; /* 버튼 컨테이너를 아래쪽으로 밀어냄 */
 `;
 
 const ErrorMessage = styled.p`
@@ -130,8 +151,8 @@ const PostEdit = () => {
 
     return (
         <Container>
-            <h2>게시글 수정하기</h2>
-            <form onSubmit={handleFormSubmit}>
+            <Title>게시글 수정하기</Title> {/* 제목을 가운데 정렬 */}
+            <Form onSubmit={handleFormSubmit}>
                 <Input
                     type="text"
                     name="title"
@@ -145,16 +166,11 @@ const PostEdit = () => {
                     onChange={handleInputChange}
                     placeholder="내용을 입력하세요"
                 />
-                {/* 작성자 필드는 수정 불가능 */}
-                <Input
-                    type="text"
-                    name="author"
-                    value={post.author}
-                    readOnly
-                />
                 {error && <ErrorMessage>{error}</ErrorMessage>}  {/* 에러 메시지 표시 */}
-                <Button type="submit">수정 완료</Button>
-            </form>
+                <ButtonContainer>
+                    <Button type="submit">수정 완료</Button>
+                </ButtonContainer>
+            </Form>
         </Container>
     );
 };
