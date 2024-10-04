@@ -133,6 +133,7 @@ const PostDetail = () => {
     // 댓글 작성 핸들러
     const handleCommentSubmit = async () => {
       try {
+        // eslint-disable-next-line no-unused-vars
         const response = await axios.post(
           `/api/posts/${id}/comments`,
           {
@@ -140,7 +141,6 @@ const PostDetail = () => {
           },
           { withCredentials: true }
         );
-        console.log(response.data);
         // 댓글 목록을 다시 가져와서 업데이트
         const fetchComments = async () => {
           try {
@@ -166,42 +166,53 @@ const PostDetail = () => {
     };
 
     return (
-        <Container>
-            <h2>{post.title}</h2>
-            <p>작성자: {post.author}({post.userid})</p>
-            <p>작성 시각: {formatDate(post.createdAt)}</p>
-            <p>최종 수정 시각: {post.updatedAt ? formatDate(post.updatedAt) : '-'}</p>
-            <p>조회수: {post.views}</p>
-            <hr />
-            <p>{post.content}</p>
+      <Container>
+        <h2>{post.title}</h2>
+        <p>
+          작성자: {post.author}({post.userid})
+        </p>
+        <p>작성 시각: {formatDate(post.createdAt)}</p>
+        <p>
+          최종 수정 시각: {post.updatedAt ? formatDate(post.updatedAt) : "-"}
+        </p>
+        <p>조회수: {post.views}</p>
+        <hr />
+        <p>{post.content}</p>
 
-            {/* 현재 로그인한 사용자의 id와 게시글 작성자의 id가 일치할 때만 수정 버튼 표시 */}
-            {currentUser.userid === post.userid && (
-                <Button onClick={handleEditClick}>수정하기</Button>
-            )}
+        {/* 현재 로그인한 사용자의 id와 게시글 작성자의 id가 일치할 때만 수정 버튼 표시 */}
+        {currentUser.userid === post.userid && (
+          <Button onClick={handleEditClick}>수정하기</Button>
+        )}
 
-            {/* 댓글 목록 */}
-            <CommentBox>
-                <h3>댓글</h3>
-                <CommentList>
-                    {comments.map((comment, index) => (
-                        <CommentItem key={index}>
-                            <strong>{comment.author}:</strong> {comment.content}
-                            <br />
-                            <small>{formatDate(comment.createdAt)}</small>
-                        </CommentItem>
-                    ))}
-                </CommentList>
+        {/* 댓글 목록 */}
+        <CommentBox>
+          <h3>댓글</h3>
+          <CommentList>
+            {comments.map((comment, index) => (
+              <CommentItem key={index}>
+                <strong>{comment.author}:</strong> {comment.content}
+                <br />
+                <small>{formatDate(comment.createdAt)}</small>
+              </CommentItem>
+            ))}
+          </CommentList>
 
-                {/* 댓글 입력란 */}
-                <CommentInput
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="댓글을 입력하세요..."
-                />
-                <Button onClick={handleCommentSubmit}>댓글 작성</Button>
-            </CommentBox>
-        </Container>
+          {/* 댓글 입력란 */}
+          <CommentInput
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                // Shift + Enter는 줄바꿈을 허용
+                e.preventDefault(); // 기본 Enter 동작 방지 (줄바꿈)
+                handleCommentSubmit(); // 댓글 제출
+              }
+            }}
+            placeholder="댓글을 입력하세요..."
+          />
+          <Button onClick={handleCommentSubmit}>댓글 작성</Button>
+        </CommentBox>
+      </Container>
     );
 };
 

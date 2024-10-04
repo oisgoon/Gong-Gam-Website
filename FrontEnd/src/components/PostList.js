@@ -43,8 +43,8 @@ const PostInfo = styled.div`
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [username, setUsername] = useState(''); // 유저 이름 상태 추가
-  const [userid, setUserid] = useState('');     // 유저 아이디 상태 추가
+  const [, setUsername] = useState('');   // 유저 이름 상태 추가
+  const [, setUserid] = useState('');     // 유저 아이디 상태 추가
 
   // 게시글 목록 가져오기
   useEffect(() => {
