@@ -28,6 +28,34 @@ const Button = styled.button`
   }
 `;
 
+const CommentBox = styled.div`
+  margin-top: 40px;
+  text-align: left;
+`;
+
+const CommentInput = styled.textarea`
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+`;
+
+const CommentList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+`;
+
+const CommentItem = styled.li`
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+`;
+
 // 날짜 포맷팅 함수
 const formatDate = (dateArray) => {
   if (Array.isArray(dateArray)) {
@@ -50,35 +78,72 @@ const PostDetail = () => {
     const { id } = useParams(); // URL에서 id를 가져옴
     const [post, setPost] = useState(null);
     const [currentUser, setCurrentUser] = useState(null); // 로그인한 사용자 정보
+    const [comments, setComments] = useState([]); // 댓글 목록 상태
+    const [newComment, setNewComment] = useState(""); // 새로운 댓글 상태
     const navigate = useNavigate(); // 수정 페이지로 이동을 위한 hook
 
     // 게시글과 현재 로그인한 사용자 정보 가져오기
     useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                const response = await axios.get(`/api/posts/${id}`);
-                setPost(response.data);
-            } catch (error) {
-                console.error('Error fetching post', error);
-            }
-        };
+      const fetchPost = async () => {
+        try {
+          const response = await axios.get(`/api/posts/${id}`);
+          const postData = response.data;
 
-        const fetchCurrentUser = async () => {
-            try {
-                const response = await axios.get('/api/me', { withCredentials: true });
-                setCurrentUser(response.data); // 로그인한 사용자 정보 저장
-            } catch (error) {
-                console.error('Error fetching current user', error);
-            }
-        };
+          // 게시글 데이터 설정
+          setPost(postData);
+          console.log(postData);
+        } catch (error) {
+          console.error("Error fetching post", error);
+        }
+      };
 
-        fetchPost();
-        fetchCurrentUser();
+      const fetchCurrentUser = async () => {
+        try {
+          const response = await axios.get("/api/me", {
+            withCredentials: true,
+          });
+          setCurrentUser(response.data); // 로그인한 사용자 정보 저장
+        } catch (error) {
+          console.error("Error fetching current user", error);
+        }
+      };
+
+      const fetchComments = async () => {
+        try {
+          const response = await axios.get(`/api/posts/${id}/comments`, {
+            withCredentials: true,
+          });
+          setComments(response.data); // 댓글 데이터 설정
+        } catch (error) {
+          console.error("Error fetching comments", error);
+        }
+      };
+
+      fetchPost();
+      fetchCurrentUser();
+      fetchComments();
+      console.log("댓글 목록" + comments);
     }, [id]);
 
     if (!post || !currentUser) {
         return <p>게시글을 불러오는 중입니다...</p>;
     }
+
+    // 댓글 작성 핸들러
+    const handleCommentSubmit = async () => {
+        try {
+            const response = await axios.post(`/api/posts/${id}/comments`, {
+                content: newComment,
+            }, { withCredentials: true });
+            
+            // 댓글 목록을 업데이트하고 입력란을 초기화
+            setComments([...comments, response.data]);
+            setNewComment("");
+            console.log("댓글 작성후 : " + comments);
+        } catch (error) {
+            console.error('Error submitting comment', error);
+        }
+    };
 
     // 수정 버튼 클릭 시 실행되는 함수
     const handleEditClick = () => {
@@ -99,6 +164,28 @@ const PostDetail = () => {
             {currentUser.userid === post.userid && (
                 <Button onClick={handleEditClick}>수정하기</Button>
             )}
+
+            {/* 댓글 목록 */}
+            <CommentBox>
+                <h3>댓글</h3>
+                <CommentList>
+                    {comments.map((comment, index) => (
+                        <CommentItem key={index}>
+                            <strong>{comment.author}:</strong> {comment.content}
+                            <br />
+                            <small>{formatDate(comment.createdAt)}</small>
+                        </CommentItem>
+                    ))}
+                </CommentList>
+
+                {/* 댓글 입력란 */}
+                <CommentInput
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="댓글을 입력하세요..."
+                />
+                <Button onClick={handleCommentSubmit}>댓글 작성</Button>
+            </CommentBox>
         </Container>
     );
 };
