@@ -3,6 +3,9 @@ package com.gonggam.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -21,12 +24,15 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    // 사용자 ID와 작성자 이름 추가
     @Column(nullable = false)
     private String userId;  // 사용자 ID
 
     @Column(nullable = false)
     private String author;  // 작성자 이름
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;  // 작성 시간 추가
 
     // 기본 생성자
     public Comment() {}
