@@ -80,6 +80,7 @@ const PostDetail = () => {
     const [currentUser, setCurrentUser] = useState(null); // 로그인한 사용자 정보
     const [comments, setComments] = useState([]); // 댓글 목록 상태
     const [newComment, setNewComment] = useState(""); // 새로운 댓글 상태
+    const [isSubmitting, setIsSubmitting] = useState(false); // 댓글 제출 중 상태
     const navigate = useNavigate(); // 수정 페이지로 이동을 위한 hook
 
     // 게시글과 현재 로그인한 사용자 정보 가져오기
@@ -104,7 +105,7 @@ const PostDetail = () => {
           });
           console.log("ID : " + response.data.userid);
           console.log("NAME : " + response.data.username);
-          setCurrentUser(response); // 로그인한 사용자 정보 저장
+          setCurrentUser(response.data); // 로그인한 사용자 정보 저장
         } catch (error) {
           console.error("Error fetching current user", error);
         }
@@ -138,19 +139,23 @@ const PostDetail = () => {
         return; // 빈칸일 경우 더 이상 진행하지 않음
       }
 
+      // 중복 제출 방지
+      if (isSubmitting) return; // 이미 제출 중인 경우 함수 종료
+
+      setIsSubmitting(true); // 제출 중 상태로 설정
+
       try {
         // 댓글 전송 요청
-        // eslint-disable-next-line no-unused-vars
         await axios.post(
           `/api/posts/${id}/comments`,
           { content: newComment },
           { withCredentials: true }
         );
 
-        // 서버로부터 받은 댓글 데이터를 추가하여 상태를 업데이트
+        // 새 댓글 데이터 생성
         const newCommentData = {
           author: currentUser.username, // 작성자의 이름
-          userId: currentUser.userId, // 작성자의 사용자 ID
+          userId: currentUser.userid, // 작성자의 사용자 ID
           content: newComment,
           createdAt: new Date(), // 현재 시간을 사용하여 새 댓글 생성
         };
@@ -158,17 +163,13 @@ const PostDetail = () => {
         // 댓글 목록에 새 댓글 추가
         setComments((prevComments) => [...prevComments, newCommentData]);
 
-        // 댓글 목록을 다시 가져와서 업데이트
-        const response = await axios.get(`/api/posts/${id}/comments`, {
-          withCredentials: true,
-        });
-        setComments(response.data); // 댓글 데이터 설정
-
         // 댓글 입력란 초기화
         setNewComment("");
       } catch (error) {
         console.error("댓글 작성 중 오류가 발생했습니다.", error);
         alert("댓글 작성 중 오류가 발생했습니다."); // 오류 알림
+      } finally {
+        setIsSubmitting(false); // 제출 완료 상태로 설정
       }
     };
 
@@ -216,14 +217,13 @@ const PostDetail = () => {
             onChange={(e) => setNewComment(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
-                // Shift + Enter는 줄바꿈을 허용
                 e.preventDefault(); // 기본 Enter 동작 방지 (줄바꿈)
                 handleCommentSubmit(); // 댓글 제출
               }
             }}
             placeholder="댓글을 입력하세요..."
           />
-          <Button onClick={handleCommentSubmit}>댓글 작성</Button>
+          <Button onClick={handleCommentSubmit} disabled={isSubmitting}>댓글 작성</Button>
         </CommentBox>
       </Container>
     );
