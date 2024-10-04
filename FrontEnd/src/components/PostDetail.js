@@ -132,31 +132,43 @@ const PostDetail = () => {
 
     // 댓글 작성 핸들러
     const handleCommentSubmit = async () => {
+      // 댓글이 빈칸인지 확인
+      if (!newComment.trim()) {
+        alert("댓글을 입력하세요."); // 경고 메시지 표시
+        return; // 빈칸일 경우 더 이상 진행하지 않음
+      }
+
       try {
+        // 댓글 전송 요청
         // eslint-disable-next-line no-unused-vars
-        const response = await axios.post(
+        await axios.post(
           `/api/posts/${id}/comments`,
-          {
-            content: newComment,
-          },
+          { content: newComment },
           { withCredentials: true }
         );
-        // 댓글 목록을 다시 가져와서 업데이트
-        const fetchComments = async () => {
-          try {
-            const response = await axios.get(`/api/posts/${id}/comments`, {
-              withCredentials: true,
-            });
-            setComments(response.data); // 댓글 데이터 설정
-          } catch (error) {
-            console.error("Error fetching comments", error);
-          }
+
+        // 서버로부터 받은 댓글 데이터를 추가하여 상태를 업데이트
+        const newCommentData = {
+          author: currentUser.username, // 작성자의 이름
+          userId: currentUser.userId, // 작성자의 사용자 ID
+          content: newComment,
+          createdAt: new Date(), // 현재 시간을 사용하여 새 댓글 생성
         };
 
-        await fetchComments(); // 댓글 목록 갱신
-        setNewComment(""); // 입력란 초기화
+        // 댓글 목록에 새 댓글 추가
+        setComments((prevComments) => [...prevComments, newCommentData]);
+
+        // 댓글 목록을 다시 가져와서 업데이트
+        const response = await axios.get(`/api/posts/${id}/comments`, {
+          withCredentials: true,
+        });
+        setComments(response.data); // 댓글 데이터 설정
+
+        // 댓글 입력란 초기화
+        setNewComment("");
       } catch (error) {
-        console.error("Error submitting comment", error);
+        console.error("댓글 작성 중 오류가 발생했습니다.", error);
+        alert("댓글 작성 중 오류가 발생했습니다."); // 오류 알림
       }
     };
 
@@ -190,9 +202,10 @@ const PostDetail = () => {
           <CommentList>
             {comments.map((comment, index) => (
               <CommentItem key={index}>
-                <strong>{comment.author}:</strong> {comment.content}
+                <strong>{comment.author}({comment.userId}) : </strong> {comment.content}
                 <br />
                 <small>{formatDate(comment.createdAt)}</small>{" "}
+                {/* 작성 시간 표시 */}
               </CommentItem>
             ))}
           </CommentList>
