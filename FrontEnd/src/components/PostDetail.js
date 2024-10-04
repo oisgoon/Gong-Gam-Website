@@ -8,13 +8,18 @@ const Container = styled.div`
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
   width: 70vw;
   margin: 0 auto;
+  text-align: left; /* 내용 왼쪽 정렬 */
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+  margin-top: 20px; /* 버튼 상단 여백 추가 */
 `;
 
 const Button = styled.button`
-  margin-top: 20px;
   margin-right: 10px; /* 버튼 간의 여백 추가 */
   padding: 10px 20px;
   background-color: #4caf50; /* 기본 색상 (수정 버튼) */
@@ -216,10 +221,10 @@ const PostDetail = () => {
 
       {/* 현재 로그인한 사용자의 id와 게시글 작성자의 id가 일치할 때만 수정 및 삭제 버튼 표시 */}
       {currentUser.userid === post.userid && (
-        <>
+        <ButtonContainer>
           <Button onClick={handleEditClick}>수정하기</Button>
           <DeleteButton onClick={handleDeleteClick}>삭제하기</DeleteButton>
-        </>
+        </ButtonContainer>
       )}
 
       {/* 댓글 목록 */}

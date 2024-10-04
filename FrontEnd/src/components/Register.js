@@ -63,8 +63,7 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [message, setMessage] = useState({ text: '', success: false }); // 메시지 상태 추가
 
     // 영어 소문자 및 숫자만 허용하는 정규식
     const useridRegex = /^[a-z0-9]+$/;
@@ -74,13 +73,13 @@ const Register = () => {
 
         // 유효성 검사: userid 형식 확인
         if (!useridRegex.test(userid)) {
-            setErrorMessage('아이디는 영어 소문자와 숫자만 가능합니다.');
+            setMessage({ text: '아이디는 영어 소문자와 숫자만 가능합니다.', success: false });
             return;
         }
 
         // 비밀번호 확인 일치 여부
         if (password !== confirmPassword) {
-            setErrorMessage('비밀번호가 일치하지 않습니다.');
+            setMessage({ text: '비밀번호가 일치하지 않습니다.', success: false });
             return;
         }
 
@@ -93,16 +92,15 @@ const Register = () => {
             });
 
             if (response.ok) {
-                setSuccessMessage('회원가입 성공!');
-                setErrorMessage('');
+                setMessage({ text: '회원가입 성공!', success: true });
             } else if (response.status === 409) {
                 // 409 상태 코드: 중복된 아이디
-                setErrorMessage('이미 사용 중인 아이디입니다.');
+                setMessage({ text: '이미 사용 중인 아이디입니다.', success: false });
             } else {
-                setErrorMessage('회원가입 실패.');
+                setMessage({ text: '회원가입 실패.', success: false });
             }
         } catch (error) {
-            setErrorMessage('서버 오류가 발생했습니다.');
+            setMessage({ text: '서버 오류가 발생했습니다.', success: false });
         }
     };
 
@@ -138,8 +136,9 @@ const Register = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                 />
-                {successMessage && <Message success>{successMessage}</Message>}
-                {errorMessage && <Message>{errorMessage}</Message>}
+                
+                {message.text && <Message success={message.success}>{message.text}</Message>}
+                
                 <button type="submit">회원가입</button>
             </Form>
             <LinkContainer>

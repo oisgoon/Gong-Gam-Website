@@ -21,22 +21,26 @@ const Form = styled.form`
 
   input {
     width: 100%;
+    height: 45px; /* 입력 필드 높이 설정 */
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1em;
+    box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
   }
 
   button {
-    padding: 10px;
+    width: 100%; /* 버튼 너비를 입력 필드와 동일하게 설정 */
+    height: 45px; /* 버튼 높이 설정 */
+    padding: 0; /* 패딩을 0으로 설정하여 높이를 일치시킴 */
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 1em;
-    margin-bottom: 10px;
+    box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
 
     &:hover {
       background-color: #218838;
