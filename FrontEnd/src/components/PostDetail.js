@@ -45,6 +45,8 @@ const DeleteButton = styled(Button)`
 const CommentBox = styled.div`
   margin-top: 40px;
   text-align: left;
+  max-height: 300px; /* 최대 높이 설정 */
+  overflow-y: auto; /* 세로 스크롤바 표시 */
 `;
 
 const CommentInput = styled.textarea`
@@ -54,7 +56,7 @@ const CommentInput = styled.textarea`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  resize: none;
+  resize: none; /* 크기 조정 비활성화 */
 `;
 
 const CommentList = styled.ul`

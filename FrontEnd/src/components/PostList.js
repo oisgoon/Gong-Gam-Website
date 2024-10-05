@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 // 스타일 정의
 const Container = styled.div`
@@ -11,8 +11,8 @@ const Container = styled.div`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 50vw;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-height: 80vh; /* 최대 높이 설정 */
+  overflow-y: auto; /* 세로 스크롤바 표시 */
   margin: 0 auto;
 `;
 
@@ -41,10 +41,16 @@ const PostInfo = styled.div`
   margin-top: 5px;
 `;
 
+const UserInfo = styled.div`
+  font-size: 0.9em;
+  color: #333;
+  margin-bottom: 20px;
+`;
+
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [, setUsername] = useState('');   // 유저 이름 상태 추가
-  const [, setUserid] = useState('');     // 유저 아이디 상태 추가
+  const [username, setUsername] = useState(''); // 유저 이름 상태 추가
+  const [userid, setUserid] = useState('');     // 유저 아이디 상태 추가
 
   // 게시글 목록 가져오기
   useEffect(() => {
@@ -84,8 +90,6 @@ const PostList = () => {
   // 날짜 포맷팅 함수
   const formatDate = (dateArray) => {
       if (Array.isArray(dateArray)) {
-        // 배열을 전달받았을 경우: [year, month, day, hour, minute, second, nanosecond]
-        // JavaScript의 Date 객체는 month가 0부터 시작하므로, month에서 -1을 해야 함
         const [year, month, day, hour, minute, second] = dateArray;
         const date = new Date(year, month - 1, day, hour, minute, second);
         if (isNaN(date.getTime())) {
@@ -93,7 +97,6 @@ const PostList = () => {
         }
         return date.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
       } else {
-          // 배열이 아닌 경우 기존 처리
           const date = new Date(dateArray);
           if (isNaN(date.getTime())) {
               return '-'; // 유효하지 않은 날짜
@@ -104,8 +107,6 @@ const PostList = () => {
   
   return (
     <Container>
-      {/* 우측 상단에 유저 이름과 아이디 표시 */}
-
       <h2>게시글 목록</h2>
       {posts.length > 0 ? (
         posts.map(post => (
