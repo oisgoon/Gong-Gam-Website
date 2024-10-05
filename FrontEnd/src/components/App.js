@@ -54,8 +54,8 @@ const CreatePostButton = styled(Link)`
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState(""); // 유저 이름 상태
-  const [userid, setUserid] = useState(""); // 유저 ID 상태
+  const [username, setUsername] = useState("");   // 유저 이름 상태
+  const [userid, setUserid] = useState("");       // 유저 ID 상태
 
   const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
@@ -69,7 +69,6 @@ const App = () => {
           withCredentials: true,
         }
       );
-      // 로그아웃 후 상태 초기화 및 홈 페이지(/)로 리다이렉트
       setLoggedIn(false);
       setUsername("");
       setUserid("");
@@ -79,7 +78,6 @@ const App = () => {
         console.warn(
           "로그아웃 실패: 인증되지 않은 요청입니다. 세션이 이미 만료되었습니다."
         );
-        // 세션이 만료된 것으로 간주하고 상태 초기화 및 리디렉트
         setLoggedIn(false);
         setUsername("");
         setUserid("");
@@ -93,9 +91,9 @@ const App = () => {
   // 로그인 성공 시 userid와 username을 받아서 상태에 저장
   const handleLoginSuccess = ({ userid, username }) => {
     setLoggedIn(true);
-    setUsername(username); // 로그인된 사용자 이름 저장
-    setUserid(userid); // 로그인된 사용자 ID 저장
-    navigate("/post-list"); // 로그인 성공 시 /post-list로 이동
+    setUsername(username);    // 로그인된 사용자 이름 저장
+    setUserid(userid);        // 로그인된 사용자 ID 저장
+    navigate("/post-list");   // 로그인 성공 시 /post-list로 이동
   };
 
   return (
