@@ -62,10 +62,13 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState({ text: '', success: false }); // 메시지 상태 추가
+    const [message, setMessage] = useState({ text: '', success: false });
 
     // 영어 소문자 및 숫자만 허용하는 정규식
     const useridRegex = /^[a-z0-9]+$/;
+
+    // 비밀번호는 8자 이상, 특수문자 포함하는 정규식
+    const passwordRegex = /^(?=.*[!@#$%^&*]).{8,}$/;
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -73,6 +76,12 @@ const Register = () => {
         // 유효성 검사: userid 형식 확인
         if (!useridRegex.test(userid)) {
             setMessage({ text: '아이디는 영어 소문자와 숫자만 가능합니다.', success: false });
+            return;
+        }
+
+        // 비밀번호 규칙 확인
+        if (!passwordRegex.test(password)) {
+            setMessage({ text: '비밀번호는 8자 이상이어야 하며, 특수문자를 포함해야 합니다.', success: false });
             return;
         }
 
@@ -123,7 +132,7 @@ const Register = () => {
                 />
                 <input
                     type="password"
-                    placeholder="비밀번호"
+                    placeholder="비밀번호 (8자 이상, 특수문자 포함)"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
