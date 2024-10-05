@@ -4,6 +4,7 @@ import com.gonggam.entity.Comment;
 import com.gonggam.entity.Post;
 import com.gonggam.repository.CommentRepository;
 import com.gonggam.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,5 +38,11 @@ public class CommentService {
     public List<Comment> getCommentsByPostId(Long postId) {
         // 해당 게시글의 댓글을 조회
         return commentRepository.findByPostId(postId);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        // 댓글 삭제 로직 (commentId로 삭제)
+        commentRepository.deleteById(commentId);
     }
 }

@@ -65,19 +65,40 @@ const CommentItem = styled.li`
   padding: 10px;
   background-color: #f1f1f1;
   border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   box-sizing: border-box; /* 테두리와 패딩이 요소 크기에 포함되도록 설정 */
+`;
+
+const CommentText = styled.div`
+  flex-grow: 1;
+`;
+
+const CommentDeleteButton = styled.button`
+  background-color: #f44336; /* 빨간색 배경 */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #d32f2f; /* hover 색상 */
+  }
 `;
 
 const CommentInput = styled.textarea`
   width: 100%;
   height: 100px;
-  margin-top: 10px; /* margin을 없애기 */
-  margin-bottom: 10px; /* margin을 없애기 */
-  padding: 10px; /* padding을 없애기 */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  resize: none; /* 크기 조정 비활성화 */
-  box-sizing: border-box; /* 테두리와 패딩이 요소 크기에 포함되도록 설정 */
+  resize: none;
+  box-sizing: border-box;
 `;
 
 // 날짜 포맷팅 함수
@@ -127,8 +148,6 @@ const PostDetail = () => {
         const response = await axios.get("/api/me", {
           withCredentials: true,
         });
-        console.log("ID : " + response.data.userid);
-        console.log("NAME : " + response.data.username);
         setCurrentUser(response.data); // 로그인한 사용자 정보 저장
       } catch (error) {
         console.error("Error fetching current user", error);
@@ -197,6 +216,25 @@ const PostDetail = () => {
     }
   };
 
+  // 댓글 삭제 핸들러
+  const handleDeleteComment = async (commentId) => {
+    if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+      try {
+        await axios.delete(`/api/posts/${id}/comments/${commentId}`, {
+          withCredentials: true,
+        });
+
+        // 삭제된 댓글을 목록에서 제거
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== commentId)
+        );
+      } catch (error) {
+        console.error("댓글 삭제 중 오류가 발생했습니다.", error);
+        alert("댓글 삭제 중 오류가 발생했습니다."); // 오류 알림
+      }
+    }
+  };
+
   // 수정 버튼 클릭 시 실행되는 함수
   const handleEditClick = () => {
     navigate(`/edit/${id}`); // `/edit/{id}` 경로로 이동하도록 설정
@@ -241,15 +279,25 @@ const PostDetail = () => {
       <CommentBox>
         <h3>댓글</h3>
         <CommentList>
-          {comments.map((comment, index) => (
-            <CommentItem key={index}>
-              <strong>
-                {comment.author}({comment.userId}) :{" "}
-              </strong>{" "}
-              {comment.content}
-              <br />
-              <small>{formatDate(comment.createdAt)}</small>{" "}
-              {/* 작성 시간 표시 */}
+          {comments.map((comment) => (
+            <CommentItem key={comment.id}>
+              <CommentText>
+                <strong>
+                  {comment.author}({comment.userId}) :{" "}
+                </strong>
+                {comment.content}
+                <br />
+                <small>{formatDate(comment.createdAt)}</small>
+              </CommentText>
+
+              {/* 댓글 삭제 버튼 */}
+              {currentUser.userid === comment.userId && (
+                <CommentDeleteButton
+                  onClick={() => handleDeleteComment(comment.id)}
+                >
+                  삭제
+                </CommentDeleteButton>
+              )}
             </CommentItem>
           ))}
         </CommentList>

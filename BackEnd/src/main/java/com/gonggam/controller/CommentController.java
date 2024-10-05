@@ -2,6 +2,7 @@ package com.gonggam.controller;
 
 import com.gonggam.entity.Comment;
 import com.gonggam.entity.Post;
+import com.gonggam.repository.CommentRepository;
 import com.gonggam.repository.PostRepository;
 import com.gonggam.service.CommentService;
 import jakarta.servlet.http.HttpSession;
@@ -16,12 +17,14 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final PostRepository postRepository; // PostRepository 주입
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository; // CommentRepository 주입
 
     // 생성자 주입
-    public CommentController(CommentService commentService, PostRepository postRepository) {
+    public CommentController(CommentService commentService, PostRepository postRepository, CommentRepository commentRepository) {
         this.commentService = commentService;
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
     @PostMapping
@@ -50,5 +53,29 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long postId) {
         List<Comment> comments = commentService.getCommentsByPostId(postId);
         return ResponseEntity.ok(comments);
+    }
+
+    // 댓글 삭제 기능 추가
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, HttpSession session) {
+        // 세션에서 userid 가져오기
+        String userid = (String) session.getAttribute("userid");
+
+        if (userid == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        // commentId로 댓글 찾기
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+
+        // 현재 로그인한 사용자가 댓글 작성자인지 확인
+        if (!comment.getUserId().equals(userid)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("댓글 삭제 권한이 없습니다.");
+        }
+
+        // 댓글 삭제
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 }
