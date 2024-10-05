@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PostList from './PostList';
@@ -24,6 +24,11 @@ const Heading = styled.h1`
   font-size: 2.5em;
   color: #333;
   margin-bottom: 20px;
+  margin-top: 50px;
+  cursor: pointer; /* 마우스를 올리면 커서가 포인터 모양으로 변경 */
+  &:hover {
+    color: #555; /* 제목에 마우스를 올리면 색상 변화 */
+  }
 `;
 
 const Header = styled.div`
@@ -111,7 +116,11 @@ const App = () => {
         </Header>
       )}
 
-      <Heading>Gong-Gam 게시판</Heading>
+      {/* Link 컴포넌트를 사용해 제목을 클릭하면 홈('/')으로 이동 */}
+      <Link to="/" style={{ textDecoration: 'none' }}>
+        <Heading>🥰Gong-Gam 게시판😘</Heading>
+      </Link>
+
       <AppContainer>
         <Routes>
           {!loggedIn ? (

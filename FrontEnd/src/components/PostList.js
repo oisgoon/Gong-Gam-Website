@@ -16,6 +16,10 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
+const PostWrapper = styled(Link)`  /* Link를 감싸는 styled-component */
+  text-decoration: none;
+`;
+
 const Post = styled.div`
   background-color: #f9f9f9;
   margin-bottom: 15px;
@@ -23,16 +27,18 @@ const Post = styled.div`
   border-radius: 5px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   text-align: left;
+  cursor: pointer;  /* 커서가 포인터 모양으로 변경 */
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f1f1f1;  /* hover 시 배경색 변경 */
+  }
 `;
 
-const PostTitle = styled(Link)`
+const PostTitle = styled.div`
   font-size: 1.2em;
   font-weight: bold;
   color: #333;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const PostInfo = styled.div`
@@ -104,13 +110,15 @@ const PostList = () => {
       <h2>게시글 목록</h2>
       {posts.length > 0 ? (
         posts.map(post => (
-          <Post key={post.id}>
-            <PostTitle to={`/posts/${post.id}`}>{post.title}</PostTitle>
-            <PostInfo>작성자: {post.author}({post.userid})</PostInfo>
-            <PostInfo>작성 시각: {formatDate(post.createdAt)}</PostInfo>
-            <PostInfo>최종 수정 시각: {formatDate(post.updatedAt)}</PostInfo>
-            <PostInfo>조회수: {post.views}</PostInfo>
-          </Post>
+          <PostWrapper to={`/posts/${post.id}`} key={post.id}>
+            <Post>
+              <PostTitle>{post.title}</PostTitle>
+              <PostInfo>작성자: {post.author}({post.userid})</PostInfo>
+              <PostInfo>작성 시각: {formatDate(post.createdAt)}</PostInfo>
+              <PostInfo>최종 수정 시각: {formatDate(post.updatedAt)}</PostInfo>
+              <PostInfo>조회수: {post.views}</PostInfo>
+            </Post>
+          </PostWrapper>
         ))
       ) : (
         <p>게시글이 없습니다.</p>

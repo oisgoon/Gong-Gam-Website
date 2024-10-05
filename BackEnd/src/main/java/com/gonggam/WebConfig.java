@@ -11,5 +11,13 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")  // 경로 수정
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
-    }
+    }const CommentInput = styled.textarea`
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none; /* 크기 조정 비활성화 */
+`;
+
 }

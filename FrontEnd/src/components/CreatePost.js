@@ -22,13 +22,16 @@ const Form = styled.form`
   height: 90%; /* 폼 높이를 전체 높이에 맞춤 */
   justify-content: space-between; /* 요소 간격을 균등하게 배치 */
 
+  /* 공통 글씨체 및 크기 설정 */
+  font-size: 1em;
+  font-family: Arial, sans-serif; /* 원하는 글씨체로 설정 */
+
   input {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 1em;
     box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
   }
 
@@ -39,7 +42,6 @@ const Form = styled.form`
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 1em;
     resize: none; /* 크기 조정 비활성화 */
     overflow-y: scroll; /* 스크롤 항상 표시 */
     box-sizing: border-box; /* 패딩과 보더를 포함한 크기 계산 */
@@ -54,26 +56,26 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 10px;
-  background-color: #28a745; /* 작성 버튼 색상 */
   color: white;
   border: none; /* 테두리 제거 */
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
   margin-left: 10px; /* 버튼 사이의 여백 */
+`;
 
+const CreateButton = styled(Button)`
+  background-color: #28a745; /* 작성 버튼 색상 */
   &:hover {
     background-color: #218838; /* 작성 버튼 hover 색상 */
   }
-
-  &:nth-of-type(2) {
-    background-color: #007bff; /* 뒤로가기 버튼 색상 */
-
-    &:hover {
-      background-color: #0056b3; /* 뒤로가기 버튼 hover 색상 */
-    }
+`
+const BackButton = styled(Button)`
+  background-color: #007bff; /* 뒤로가기 버튼 색상 */
+  &:hover {
+    background-color: #0056b3; /* 뒤로가기 버튼 hover 색상 */
   }
-`;
+`
 
 const CreatePost = () => {
     const [title, setTitle] = useState('');
@@ -129,8 +131,8 @@ const CreatePost = () => {
                     required
                 ></textarea>
                 <ButtonContainer>
-                    <Button type="submit">작성</Button>
-                    <Button type="button" onClick={() => navigate('/post-list')}>뒤로가기</Button>
+                    <BackButton type="button" onClick={() => navigate('/post-list')}>뒤로가기</BackButton>
+                    <CreateButton type="submit">작성</CreateButton>
                 </ButtonContainer>
             </Form>
         </Container>

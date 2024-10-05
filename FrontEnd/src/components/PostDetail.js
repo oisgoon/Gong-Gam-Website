@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 // 스타일 정의
 const Container = styled.div`
+  width: 100%;
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -14,6 +15,7 @@ const Container = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  width: 100%;
   display: flex;
   justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
   margin-top: 20px; /* 버튼 상단 여백 추가 */
@@ -43,33 +45,39 @@ const DeleteButton = styled(Button)`
 `;
 
 const CommentBox = styled.div`
+  width: 100%;
   margin-top: 40px;
   text-align: left;
   max-height: 300px; /* 최대 높이 설정 */
   overflow-y: auto; /* 세로 스크롤바 표시 */
 `;
 
-const CommentInput = styled.textarea`
-  width: 100%;
-  height: 100px;
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  resize: none; /* 크기 조정 비활성화 */
-`;
-
 const CommentList = styled.ul`
+  width: 100%;
   list-style: none;
   padding: 0;
   margin-top: 20px;
 `;
 
 const CommentItem = styled.li`
+  width: 100%;
   margin-bottom: 15px;
   padding: 10px;
   background-color: #f1f1f1;
   border-radius: 5px;
+  box-sizing: border-box; /* 테두리와 패딩이 요소 크기에 포함되도록 설정 */
+`;
+
+const CommentInput = styled.textarea`
+  width: 100%;
+  height: 100px;
+  margin-top: 10px; /* margin을 없애기 */
+  margin-bottom: 10px; /* margin을 없애기 */
+  padding: 10px; /* padding을 없애기 */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none; /* 크기 조정 비활성화 */
+  box-sizing: border-box; /* 테두리와 패딩이 요소 크기에 포함되도록 설정 */
 `;
 
 // 날짜 포맷팅 함수
