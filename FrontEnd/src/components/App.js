@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PostList from './PostList';
@@ -37,6 +37,23 @@ const Header = styled.div`
   right: 20px;
   font-size: 1.2em;
   color: #333;
+`;
+
+const LogoutButton = styled.span`
+  display: inline-block; /* 버튼처럼 보이게 설정 */
+  color: #ff6347; /* 로그아웃 버튼 색상 (Tomato) */
+  cursor: pointer;
+  font-weight: bold;
+  padding: 2px 10px; /* 좌우와 상하에 충분한 패딩 추가 */
+  border: 1px solid #ff6347; /* 테두리 */
+  border-radius: 4px; /* 둥근 테두리 */
+  box-sizing: border-box; /* 테두리와 패딩이 요소 크기에 포함되도록 설정 */
+  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 효과 */
+  
+  &:hover {
+    background-color: #ff6347; /* 마우스를 올리면 배경색 변경 */
+    color: white; /* 마우스를 올리면 글씨색 변경 */
+  }
 `;
 
 const CreatePostButton = styled(Link)`
@@ -112,7 +129,7 @@ const App = () => {
               : "로그인을 해주세요"}
           </span>
           {" | "}
-          <span onClick={handleLogout}>로그아웃</span> {/* 로그아웃 버튼 */}
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton> {/* 로그아웃 버튼 */}
         </Header>
       )}
 
