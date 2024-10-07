@@ -79,14 +79,14 @@ const Login = ({ setLoggedIn }) => {
     try {
       // 로그인 요청
       const response = await axios.post(
-        "http://localhost:8080/api/login",
+        "http://34.230.14.150:8080/api/login",
         { userid, password },
         { withCredentials: true }
       );
       console.log("로그인 성공:", response.data);
 
       // 로그인 성공 시 유저 정보 요청
-      const userInfoResponse = await axios.get("http://localhost:8080/api/me", {
+      const userInfoResponse = await axios.get("http://34.230.14.150:8080/api/me", {
         withCredentials: true,
       });
       console.log("유저 이름:", userInfoResponse.data.username);

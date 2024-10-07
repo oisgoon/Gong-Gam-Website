@@ -93,7 +93,7 @@ const Register = () => {
 
         try {
             // 서버로 회원가입 요청
-            const response = await fetch('http://localhost:8080/api/register', {
+            const response = await fetch('http://34.230.14.150:8080/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userid, username, password }),
