@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // 스타일 정의
 const Container = styled.div`
   background-color: white;
@@ -79,14 +81,14 @@ const Login = ({ setLoggedIn }) => {
     try {
       // 로그인 요청
       const response = await axios.post(
-        "http://34.230.14.150:8080/api/login",
+        `${API_BASE_URL}/api/login`,
         { userid, password },
         { withCredentials: true }
       );
       console.log("로그인 성공:", response.data);
 
       // 로그인 성공 시 유저 정보 요청
-      const userInfoResponse = await axios.get("http://34.230.14.150:8080/api/me", {
+      const userInfoResponse = await axios.get(`${API_BASE_URL}/api/me`, {
         withCredentials: true,
       });
       console.log("유저 이름:", userInfoResponse.data.username);

@@ -2,11 +2,6 @@
 .DS_Store
 Thumbs.db
 *.log
-*.env
-*.properties
-BackEnd/src/main/resources/application.properties
-BackEnd/build/resources/main/application.properties
-BackEnd/bin/main/application.properties
 
 # iCloud와 같은 외부 저장 공간 관련 파일
 *.icloud
@@ -22,7 +17,6 @@ build/
 .pnp.js
 
 # 환경 파일
-.env
 .env.local
 .env.development.local
 .env.test.local

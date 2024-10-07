@@ -9,6 +9,8 @@ import PostDetail from './PostDetail';
 import PostEdit from './PostEdit';
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // 스타일 정의
 const AppContainer = styled.div`
   display: flex;
@@ -85,7 +87,8 @@ const App = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://34.230.14.150:8080/api/logout",
+        // eslint-disable-next-line no-template-curly-in-string
+        `${API_BASE_URL}/api/logout`,
         {},
         {
           withCredentials: true,
