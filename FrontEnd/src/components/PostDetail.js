@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // 스타일 정의
 const Container = styled.div`
   width: 100%;
@@ -132,7 +134,7 @@ const PostDetail = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/api/posts/${id}`);
+        const response = await axios.get(`${API_BASE_URL}/api/posts/${id}`);
         const postData = response.data;
 
         // 게시글 데이터 설정
@@ -145,7 +147,7 @@ const PostDetail = () => {
 
     const fetchCurrentUser = async () => {
       try {
-        const response = await axios.get("/api/me", {
+        const response = await axios.get(`${API_BASE_URL}/api/me`, {
           withCredentials: true,
         });
         setCurrentUser(response.data); // 로그인한 사용자 정보 저장
@@ -156,7 +158,7 @@ const PostDetail = () => {
 
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`/api/posts/${id}/comments`, {
+        const response = await axios.get(`${API_BASE_URL}/api/posts/${id}/comments`, {
           withCredentials: true,
         });
         setComments(response.data); // 댓글 데이터 설정
@@ -190,7 +192,7 @@ const PostDetail = () => {
     try {
       // 댓글 전송 요청
       await axios.post(
-        `/api/posts/${id}/comments`,
+        `${API_BASE_URL}/api/posts/${id}/comments`,
         { content: newComment },
         { withCredentials: true }
       );
@@ -220,7 +222,7 @@ const PostDetail = () => {
   const handleDeleteComment = async (commentId) => {
     if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/api/posts/${id}/comments/${commentId}`, {
+        await axios.delete(`${API_BASE_URL}/api/posts/${id}/comments/${commentId}`, {
           withCredentials: true,
         });
 
@@ -244,7 +246,7 @@ const PostDetail = () => {
   const handleDeleteClick = async () => {
     if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/api/posts/${id}`, { withCredentials: true });
+        await axios.delete(`${API_BASE_URL}/api/posts/${id}`, { withCredentials: true });
         navigate("/post-list"); // 게시글 삭제 후 목록으로 이동
       } catch (error) {
         console.error("게시글 삭제 중 오류가 발생했습니다.", error);

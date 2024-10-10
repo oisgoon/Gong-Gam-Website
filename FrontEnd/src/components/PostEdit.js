@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // 스타일 정의
 const Container = styled.div`
   padding: 40px;
@@ -89,7 +91,7 @@ const PostEdit = () => {
         // 로그인한 유저 정보 가져오기
         const fetchUserInfo = async () => {
             try {
-                const response = await axios.get('/api/me', { withCredentials: true });
+                const response = await axios.get(`${API_BASE_URL}/api/me`, { withCredentials: true });
                 setUsername(response.data.username);  // 로그인한 유저 이름 설정
                 console.log(username);
             } catch (error) {
@@ -100,7 +102,7 @@ const PostEdit = () => {
         // 게시글 정보 가져오기
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`/api/posts/${id}`);
+                const response = await axios.get(`${API_BASE_URL}/api/posts/${id}`);
                 setPost(response.data);
                 setLoading(false);  // 게시글 로딩 완료
             } catch (error) {
@@ -136,7 +138,7 @@ const PostEdit = () => {
 
         try {
             const updatedPost = { ...post };  // 작성자는 수정하지 않음
-            await axios.put(`/api/posts/${id}`, updatedPost, { withCredentials: true });
+            await axios.put(`${API_BASE_URL}/api/posts/${id}`, updatedPost, { withCredentials: true });
             alert('게시글 수정 완료!');
             navigate(`/posts/${id}`);  // 수정 후 게시글 상세 페이지로 리디렉션
         } catch (error) {

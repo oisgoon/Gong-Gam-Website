@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // 스타일 정의
 const Container = styled.div`
   background-color: white;
@@ -87,7 +89,7 @@ const CreatePost = () => {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const response = await axios.get('/api/me', { withCredentials: true });
+                const response = await axios.get(`${API_BASE_URL}/api/me`, { withCredentials: true });
                 setAuthor(response.data.username);  // 유저 이름을 상태에 저장
             } catch (error) {
                 console.error('유저 정보를 불러오는 데 실패했습니다.', error);
@@ -101,7 +103,7 @@ const CreatePost = () => {
         e.preventDefault();
         try {
             // 게시글 작성 API 호출
-            const response = await axios.post('/api/posts', 
+            const response = await axios.post(`${API_BASE_URL}/api/posts`, 
                 { title, content, author },
                 { withCredentials: true }
             );

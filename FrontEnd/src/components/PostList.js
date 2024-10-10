@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // 스타일 정의
 const Container = styled.div`
   background-color: white;
@@ -56,7 +58,7 @@ const PostList = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('/api/posts');
+        const response = await axios.get(`${API_BASE_URL}/api/posts`);
         setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts', error);
@@ -70,7 +72,7 @@ const PostList = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get('/api/me', { withCredentials: true });
+        const response = await axios.get(`${API_BASE_URL}/api/me`, { withCredentials: true });
         if (response.data.userid && response.data.username) {
           setUsername(response.data.username);
           setUserid(response.data.userid);
