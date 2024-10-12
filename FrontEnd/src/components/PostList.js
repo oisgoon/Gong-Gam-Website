@@ -13,12 +13,12 @@ const Container = styled.div`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 50vw;
-  max-height: 80vh; /* 최대 높이 설정 */
-  overflow-y: auto; /* 세로 스크롤바 표시 */
+  max-height: 75vh;
+  overflow-y: auto;
   margin: 0 auto;
 `;
 
-const PostWrapper = styled(Link)`  /* Link를 감싸는 styled-component */
+const PostWrapper = styled(Link)`
   text-decoration: none;
 `;
 
@@ -29,11 +29,11 @@ const Post = styled.div`
   border-radius: 5px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   text-align: left;
-  cursor: pointer;  /* 커서가 포인터 모양으로 변경 */
+  cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #f1f1f1;  /* hover 시 배경색 변경 */
+    background-color: #f1f1f1;
   }
 `;
 
@@ -51,42 +51,19 @@ const PostInfo = styled.div`
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [, setUsername] = useState(''); // 유저 이름 상태 추가
-  const [, setUserid] = useState('');     // 유저 아이디 상태 추가
 
   // 게시글 목록 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/posts`);
-        setPosts(response.data);
+        setPosts(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
-        console.error('Error fetching posts', error);
+        console.error('게시글을 가져오는 중 오류가 발생했습니다.', error);
       }
     };
 
     fetchPosts();
-  }, []);
-
-  // 로그인된 유저 정보 가져오기
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/me`, { withCredentials: true });
-        if (response.data.userid && response.data.username) {
-          setUsername(response.data.username);
-          setUserid(response.data.userid);
-          console.log("유저 정보 :" + response.data.username);
-          console.log("유저 정보 :" + response.data.userid);
-        }
-      } catch (error) {
-        console.error('Error fetching user info', error);
-        setUsername('');
-        setUserid('');
-      }
-    };
-
-    fetchUserInfo();
   }, []);
 
   // 날짜 포맷팅 함수
@@ -106,16 +83,16 @@ const PostList = () => {
           return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
       }
   };
-  
+
   return (
     <Container>
       <h2>게시글 목록</h2>
       {posts.length > 0 ? (
-        posts.map(post => (
+        posts.map((post) => (
           <PostWrapper to={`/posts/${post.id}`} key={post.id}>
             <Post>
               <PostTitle>{post.title}</PostTitle>
-              <PostInfo>작성자: {post.author}({post.userid})</PostInfo>
+              <PostInfo>작성자: {post.author} ({post.userid})</PostInfo>
               <PostInfo>작성 시각: {formatDate(post.createdAt)}</PostInfo>
               <PostInfo>최종 수정 시각: {formatDate(post.updatedAt)}</PostInfo>
               <PostInfo>조회수: {post.views}</PostInfo>

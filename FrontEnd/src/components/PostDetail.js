@@ -258,18 +258,13 @@ const PostDetail = () => {
   return (
     <Container>
       <h2>{post.title}</h2>
-      <p>
-        작성자: {post.author}({post.userid})
-      </p>
+      <p>작성자: {post.author}({post.userid})</p>
       <p>작성 시각: {formatDate(post.createdAt)}</p>
-      <p>
-        최종 수정 시각: {post.updatedAt ? formatDate(post.updatedAt) : "-"}
-      </p>
+      <p>최종 수정 시각: {post.updatedAt ? formatDate(post.updatedAt) : "-"}</p>
       <p>조회수: {post.views}</p>
       <hr />
       <p>{post.content}</p>
 
-      {/* 현재 로그인한 사용자의 id와 게시글 작성자의 id가 일치할 때만 수정 및 삭제 버튼 표시 */}
       {currentUser.userid === post.userid && (
         <ButtonContainer>
           <Button onClick={handleEditClick}>수정하기</Button>
@@ -277,7 +272,6 @@ const PostDetail = () => {
         </ButtonContainer>
       )}
 
-      {/* 댓글 목록 */}
       <CommentBox>
         <h3>댓글</h3>
         <CommentList>

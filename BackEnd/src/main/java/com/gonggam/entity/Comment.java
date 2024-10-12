@@ -1,5 +1,6 @@
 package com.gonggam.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
-@Table(name = "comments")  // 테이블 이름을 명시적으로 설정
+@Table(name = "comments")
 public class Comment {
 
     @Id
@@ -22,17 +23,18 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
+    @JsonBackReference // 순환 참조 해결
     private Post post;
 
     @Column(nullable = false)
-    private String userId;  // 사용자 ID
+    private String userId;
 
     @Column(nullable = false)
-    private String author;  // 작성자 이름
+    private String author;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;  // 작성 시간 추가
+    @CreationTimestamp // 생성 시간 자동 기록
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     // 기본 생성자
     public Comment() {}
