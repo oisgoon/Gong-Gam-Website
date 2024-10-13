@@ -60,3 +60,6 @@ REACT_APP_API_BASE_URL=http://34.207.228.127:8080
 - **백엔드**: Spring Boot, JPA, MySQL
 - **빌드 도구**: Gradle (백엔드), npm (프론트엔드)
 - **데이터베이스**: MySQL
+
+## 정리글
+https://velog.io/@oisgoon/Gong-Gam-Website
