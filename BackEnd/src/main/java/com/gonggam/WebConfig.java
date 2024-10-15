@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     private String frontendUrl;
     
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
         registry.addMapping("/**")  // 경로 수정
                 .allowedOrigins(frontendUrl)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
